@@ -6,13 +6,45 @@
     android:layout_height="match_parent"
     tools:context="in.co.dipankar.quickandroidexample.MainActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <in.co.dipankar.quickandorid.views.StateImageButton
+            android:id="@+id/state1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:disableBackground="@drawable/ic_1"
+            app:enableBackground="@drawable/ic_2"
+            app:is_enable="true"
+            />
+
+        <in.co.dipankar.quickandorid.views.MultiStateImageButton
+            android:id="@+id/state2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundState0="@drawable/ic_0"
+            app:backgroundState1="@drawable/ic_1"
+            app:backgroundState2="@drawable/ic_2"
+            app:backgroundState3="@drawable/ic_3"
+            app:backgroundState4="@drawable/ic_4"
+            app:backgroundState5="@drawable/ic_5"
+            app:backgroundState6="@drawable/ic_6"
+            app:backgroundState7="@drawable/ic_7"
+            app:backgroundState8="@drawable/ic_8"
+            app:current_state="5"
+            />
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

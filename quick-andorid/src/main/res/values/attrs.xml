@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiStateImageButton">
+        <attr name="current_state" format="integer"/>
+        <attr name="backgroundState0" format="reference"  />
+        <attr name="backgroundState1" format="reference"  />
+        <attr name="backgroundState2" format="reference"  />
+        <attr name="backgroundState3" format="reference"  />
+        <attr name="backgroundState4" format="reference"  />
+        <attr name="backgroundState5" format="reference"  />
+        <attr name="backgroundState6" format="reference"  />
+        <attr name="backgroundState7" format="reference"  />
+        <attr name="backgroundState8" format="reference"  />
+        <attr name="backgroundState9" format="reference"  />
+        <attr name="backgroundState10" format="reference"  />
+    </declare-styleable>
+    <declare-styleable name="StateImageButton">
+        <attr name="is_enable" format="boolean"/>
+        <attr name="disableBackground" format="reference"  />
+        <attr name="enableBackground" format="reference"  />
+    </declare-styleable>
+    <declare-styleable name="CustomFontTextView">
+        <attr name="customfont" format="string" />
+    </declare-styleable>
+</resources>
