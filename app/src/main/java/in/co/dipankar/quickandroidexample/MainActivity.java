@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StateImageButton state1 = findViewById(R.id.state1);
+        StateImageButton state1 = (StateImageButton) findViewById(R.id.state1);
 
 
         state1.setCallBack(new StateImageButton.Callback() {
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        MultiStateImageButton state2 = findViewById(R.id.state2);
+        MultiStateImageButton state2 = (MultiStateImageButton) findViewById(R.id.state2);
         state2.setCallBack(new MultiStateImageButton.Callback() {
             @Override
             public void click(int newstate) {
