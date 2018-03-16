@@ -1,9 +1,12 @@
 package in.co.dipankar.quickandroidexample;
 
 import android.Manifest;
+import android.app.usage.NetworkStatsManager;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.utils.DLog;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
@@ -12,6 +15,7 @@ import in.co.dipankar.quickandorid.views.StateImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
+    NetworkChangeReceiver mNetworkChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,44 @@ public class MainActivity extends AppCompatActivity {
         });
         testSF();
         testRP();
+        testNR();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mNetworkChangeReceiver.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mNetworkChangeReceiver.onPause();
+    }
+
+
+    private void testNR() {
+        mNetworkChangeReceiver = new NetworkChangeReceiver(this, new NetworkChangeReceiver.Callback(){
+            @Override
+            public void onNetworkGone() {
+                DLog.e("[NR] onNetworkGone");
+            }
+
+            @Override
+            public void onNetworkAvailable() {
+                DLog.e("[NR] onNetworkAvailable");
+            }
+
+            @Override
+            public void onNetworkAvailableWifi() {
+                DLog.e("[NR] onNetworkAvailableWifi");
+            }
+
+            @Override
+            public void onNetworkAvailableMobileData() {
+                DLog.e("[NR] onNetworkAvailableMobileData");
+            }
+        });
     }
 
     private void testRP() {
@@ -76,5 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                            String permissions[], int[] grantResults) {
         RuntimePermissionUtils.getInstance().onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
+
+
 
 }
