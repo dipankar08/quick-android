@@ -46,6 +46,13 @@
 
 
     </LinearLayout>
+    <in.co.dipankar.quickandorid.views.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:textColor="#27ae60"
+        app:customfont="IndieFlower.ttf"
+        android:text="Hello World"
+        android:textSize="20dp"
+        android:layout_height="wrap_content" />
 
     <in.co.dipankar.quickandorid.views.CircleImageView
         android:layout_width="120dp"
