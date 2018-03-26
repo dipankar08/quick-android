@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#ff0000"
     android:layout_height="match_parent"
     tools:context="in.co.dipankar.quickandroidexample.MainActivity">
 
@@ -23,9 +24,11 @@
             android:id="@+id/state1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:disableBackground="@drawable/ic_1"
-            app:enableBackground="@drawable/ic_2"
-            app:is_enable="true"
+            app:disable_background="@drawable/bg_circle_black"
+            app:enable_background="@drawable/bg_circle_white"
+            app:disable_src= "@drawable/ic_mute_off"
+            app:enable_src= "@drawable/ic_mute_on"
+            app:is_enable="false"
             />
 
         <in.co.dipankar.quickandorid.views.MultiStateImageButton

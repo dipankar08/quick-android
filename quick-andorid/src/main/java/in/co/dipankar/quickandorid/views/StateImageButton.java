@@ -12,7 +12,9 @@ public class StateImageButton extends android.support.v7.widget.AppCompatImageBu
 
 
     private Drawable enableBack, disableBack;
-    boolean mViewEnable = true;
+    private Drawable enableSrc, disableSrc;
+
+    boolean mViewEnable = false;
     public interface Callback{
         void click( boolean newstate);
     }
@@ -36,12 +38,14 @@ public class StateImageButton extends android.support.v7.widget.AppCompatImageBu
     }
 
     private void init(Context context, AttributeSet attrs) {
-        mViewEnable = true;
+        mViewEnable = false;
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StateImageButton, 0, 0);
         try {
-            enableBack = a.getDrawable(R.styleable.StateImageButton_enableBackground);
-            disableBack = a.getDrawable(R.styleable.StateImageButton_disableBackground);
-            mViewEnable = a.getBoolean(R.styleable.StateImageButton_is_enable, true);
+            enableBack = a.getDrawable(R.styleable.StateImageButton_enable_background);
+            disableBack = a.getDrawable(R.styleable.StateImageButton_disable_background);
+            enableSrc = a.getDrawable(R.styleable.StateImageButton_enable_src);
+            disableSrc = a.getDrawable(R.styleable.StateImageButton_disable_src);
+            mViewEnable = a.getBoolean(R.styleable.StateImageButton_is_enable, false);
         } finally {
             a.recycle();
         }
@@ -51,12 +55,19 @@ public class StateImageButton extends android.support.v7.widget.AppCompatImageBu
 
     public void setViewEnabled(boolean enabled) {
         if (enabled) {
+
             if (enableBack != null) {
-                this.setImageDrawable(enableBack);
+                this.setBackground(enableBack);
+            }
+            if (enableSrc != null) {
+                this.setImageDrawable(enableSrc);
             }
         } else {
-            if (disableBack != null) {
-                this.setImageDrawable(disableBack);
+            if (disableBack!= null) {
+                this.setBackground(disableBack);
+            }
+            if (disableSrc!= null) {
+                this.setImageDrawable(disableSrc);
             }
         }
         mViewEnable = enabled;

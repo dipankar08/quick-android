@@ -16,8 +16,10 @@
     </declare-styleable>
     <declare-styleable name="StateImageButton">
         <attr name="is_enable" format="boolean"/>
-        <attr name="disableBackground" format="reference"  />
-        <attr name="enableBackground" format="reference"  />
+        <attr name="disable_src" format="reference"  />
+        <attr name="disable_background" format="reference"  />
+        <attr name="enable_src" format="reference"  />
+        <attr name="enable_background" format="reference"  />
     </declare-styleable>
     <declare-styleable name="CustomFontTextView">
         <attr name="customfont" format="string" />
