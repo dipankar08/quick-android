@@ -19,10 +19,12 @@ public class GateKeeperUtils {
 
     Map<String, String> configMap;
     private Context mContext;
+    private INetwork mNetwork;
 
     // Constractuter
-    public void GateKeeperUtils(Context context, String remoteUrl) {
+    public void GateKeeperUtils(Context context, INetwork network, String remoteUrl) {
         mContext = context;
+        mNetwork = network;
         _downlaodAndSaveRemoteConfirg(remoteUrl);
     }
 
@@ -82,11 +84,11 @@ public class GateKeeperUtils {
     }
 
     private void _downlaodAndSaveRemoteConfirg(String remoteUrl) {
-        Network.getInstance()
+        mNetwork
                 .retrive(
                         remoteUrl,
                         Network.CacheControl.GET_LIVE_ONLY,
-                        new Network.INetworkCallback() {
+                        new Network.Callback() {
                             @Override
                             public void onSuccess(JSONObject jsonObject) {
 
