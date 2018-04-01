@@ -6,8 +6,12 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.List;
+
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.utils.DLog;
+import in.co.dipankar.quickandorid.utils.IPhoneContacts;
+import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
@@ -42,6 +46,27 @@ public class MainActivity extends AppCompatActivity {
         testSF();
         testRP();
         testNR();
+        testContact();
+    }
+
+    private void testContact() {
+        PhoneContactsUtils phoneContactsUtils = new PhoneContactsUtils(this);
+        phoneContactsUtils.getContacts(new PhoneContactsUtils.Callback() {
+            @Override
+            public void onPermissionAsked() {
+                DLog.e("PhoneContactsUtils::onPermissionAsked");
+            }
+
+            @Override
+            public void onSuccess(List<IPhoneContacts.IContact> contactList) {
+                DLog.e("PhoneContactsUtils::onSuccess"+contactList.size());
+            }
+
+            @Override
+            public void onProgress(int count, int total) {
+                DLog.e("PhoneContactsUtils::onProgress"+count+"/"+total);
+            }
+        });
     }
 
     @Override

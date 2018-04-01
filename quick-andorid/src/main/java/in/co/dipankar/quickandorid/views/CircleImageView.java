@@ -36,7 +36,9 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     private static final int COLORDRAWABLE_DIMENSION = 2;
 
     private static final int DEFAULT_BORDER_WIDTH = 0;
+    private static final int DEFAULT_DOT_WIDTH = 0;
     private static final int DEFAULT_BORDER_COLOR = Color.BLACK;
+    private static final int DEFAULT_DOT_COLOR = Color.GRAY;
     private static final int DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.TRANSPARENT;
     private static final boolean DEFAULT_BORDER_OVERLAY = false;
 
@@ -46,10 +48,15 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     private final Matrix mShaderMatrix = new Matrix();
     private final Paint mBitmapPaint = new Paint();
     private final Paint mBorderPaint = new Paint();
+    private final Paint mDotPaint = new Paint();
     private final Paint mCircleBackgroundPaint = new Paint();
 
-    private int mBorderColor = DEFAULT_BORDER_COLOR;
     private int mBorderWidth = DEFAULT_BORDER_WIDTH;
+    private int mBorderColor = DEFAULT_BORDER_COLOR;
+
+    private int mDotWidth = DEFAULT_DOT_WIDTH;
+    private int mDotColor = DEFAULT_DOT_COLOR;
+
     private int mCircleBackgroundColor = DEFAULT_CIRCLE_BACKGROUND_COLOR;
 
     private Bitmap mBitmap;
@@ -83,6 +90,8 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);
 
         mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_border_width, DEFAULT_BORDER_WIDTH);
+        mDotWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_dot_width, DEFAULT_DOT_WIDTH);
+        mDotColor = a.getColor(R.styleable.CircleImageView_civ_dot_color, DEFAULT_DOT_COLOR);
         mBorderColor = a.getColor(R.styleable.CircleImageView_civ_border_color, DEFAULT_BORDER_COLOR);
         mBorderOverlay = a.getBoolean(R.styleable.CircleImageView_civ_border_overlay, DEFAULT_BORDER_OVERLAY);
 
@@ -151,6 +160,9 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         if (mBorderWidth > 0) {
             canvas.drawCircle(mBorderRect.centerX(), mBorderRect.centerY(), mBorderRadius, mBorderPaint);
         }
+        if (mDotWidth > 0) {
+            canvas.drawCircle(mDotWidth/2, mBorderRect.centerY(), mDotWidth/2, mDotPaint);
+        }
     }
 
     @Override
@@ -175,6 +187,9 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         return mBorderColor;
     }
 
+    public int getDotColor() {
+        return mDotColor;
+    }
     public void setBorderColor(@ColorInt int borderColor) {
         if (borderColor == mBorderColor) {
             return;
@@ -182,6 +197,16 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
 
         mBorderColor = borderColor;
         mBorderPaint.setColor(mBorderColor);
+        invalidate();
+    }
+
+    public void setDotColor(@ColorInt int dotColor) {
+        if (dotColor == mDotColor) {
+            return;
+        }
+
+        mDotColor = dotColor;
+        mDotPaint.setColor(mDotColor);
         invalidate();
     }
 
@@ -397,6 +422,11 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         mBorderPaint.setColor(mBorderColor);
         mBorderPaint.setStrokeWidth(mBorderWidth);
 
+        mDotPaint.setStyle(Paint.Style.FILL);
+        mDotPaint.setAntiAlias(true);
+        mDotPaint.setColor(mDotColor);
+        mDotPaint.setStrokeWidth(mDotWidth);
+
         mCircleBackgroundPaint.setStyle(Paint.Style.FILL);
         mCircleBackgroundPaint.setAntiAlias(true);
         mCircleBackgroundPaint.setColor(mCircleBackgroundColor);
@@ -405,13 +435,13 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         mBitmapWidth = mBitmap.getWidth();
 
         mBorderRect.set(calculateBounds());
-        mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth) / 2.0f, (mBorderRect.width() - mBorderWidth) / 2.0f);
+        mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth - mDotWidth) / 2.0f, (mBorderRect.width() - mBorderWidth - mDotWidth) / 2.0f);
 
         mDrawableRect.set(mBorderRect);
         if (!mBorderOverlay && mBorderWidth > 0) {
             mDrawableRect.inset(mBorderWidth - 1.0f, mBorderWidth - 1.0f);
         }
-        mDrawableRadius = Math.min(mDrawableRect.height() / 2.0f, mDrawableRect.width() / 2.0f);
+        mDrawableRadius = Math.min(mDrawableRect.height() / 2.0f, mDrawableRect.width() / 2.0f) - mDotWidth/2;
 
         applyColorFilter();
         updateShaderMatrix();
