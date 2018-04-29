@@ -37,7 +37,7 @@ public class Network implements INetwork {
         GET_CACHE_ONLY,
     }
 
-    public void Network(Context cx, boolean debug) {
+    public Network(Context cx, boolean debug) {
         mContext = cx;
         mDebug = debug;
     }
