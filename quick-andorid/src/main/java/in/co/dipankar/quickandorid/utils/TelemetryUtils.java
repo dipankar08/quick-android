@@ -45,6 +45,10 @@ public class TelemetryUtils {
         initInternal();
     }
 
+    public void markHit(String tag) {
+        sendTelemetry(tag, null);
+    }
+    
     public void sendTelemetry(String tag, Map<String, String> map) {
         if (mHttpclient == null || mUrl == null) {
             Log.d(TAG, "You must need to call setup() first.");
@@ -59,10 +63,11 @@ public class TelemetryUtils {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 data.put(entry.getKey(), entry.getValue());
             }
-            sendTelemtry(tag, data);
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
+        sendTelemtry(tag, data);
     }
 
 
