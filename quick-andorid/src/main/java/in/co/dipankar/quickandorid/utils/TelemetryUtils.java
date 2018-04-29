@@ -12,6 +12,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
@@ -46,9 +47,9 @@ public class TelemetryUtils {
     }
 
     public void markHit(String tag) {
-        sendTelemetry(tag, null);
+        sendTelemetry(tag, new HashMap<String, String>());
     }
-    
+
     public void sendTelemetry(String tag, Map<String, String> map) {
         if (mHttpclient == null || mUrl == null) {
             Log.d(TAG, "You must need to call setup() first.");
