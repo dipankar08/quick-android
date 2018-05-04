@@ -6,8 +6,11 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
+import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.utils.DLog;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         testRP();
         testNR();
         testContact();
+        CustomButtonSheetViewTest();
     }
 
     private void testContact() {
@@ -137,13 +141,50 @@ public class MainActivity extends AppCompatActivity {
         DLog.d("Test Bool:"+(SharedPrefsUtil.getInstance().getInt("int",-1) == 10));
     }
 
+    private CustomButtonSheetView mCustomButtonSheetView;
+    private void CustomButtonSheetViewTest(){
+        mCustomButtonSheetView = findViewById(R.id.custom_endbutton_sheetview);
+        List<CustomButtonSheetView.ISheetItem> mSheetItems = new ArrayList<>();
+        mSheetItems.add(
+                new SheetItem(
+                        102,
+                        "Test Button",
+                        CustomButtonSheetView.Type.BUTTON,
+                        new CustomButtonSheetView.Callback() {
+                            @Override
+                            public void onClick(int v) {
+                                mCustomButtonSheetView.show();
+                            }
+                        },
+                        null));
+        mSheetItems.add(
+                new SheetItem(
+                        102,
+                        "Change Audio Quality",
+                        CustomButtonSheetView.Type.OPTIONS,
+                        new CustomButtonSheetView.Callback() {
+                            @Override
+                            public void onClick(int v) {
+                                switch (v) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        break;
+                                    case 2:
+                                }
+                                DLog.e("Share music Clicked");
+                            }
+                        },
+                        new CharSequence[] {"HD", "Medium", "low"}));
+
+        mCustomButtonSheetView.addMenu(mSheetItems);
+        mCustomButtonSheetView.show();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         RuntimePermissionUtils.getInstance().onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
-
-
 
 }

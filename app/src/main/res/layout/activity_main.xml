@@ -64,9 +64,15 @@
             app:civ_dot_color="#27ae60"
             app:civ_border_width="2dp"
             app:civ_border_color="#000000" />
-
     </LinearLayout>
+<!--
     <in.co.dipankar.quickandorid.views.PinSecurityView
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
+-->
+    <in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView
+        android:id="@+id/custom_endbutton_sheetview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
