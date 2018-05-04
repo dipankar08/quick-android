@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:elevation="5dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/text"
+        android:text="This is a notication"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="15dp"
+        android:background="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
+        android:textAlignment="center"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/accept"
+            android:text="Accept"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp" />
+        <Button
+            android:id="@+id/reject"
+            android:text="Reject"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_red_dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
+import in.co.dipankar.quickandorid.views.NotificationView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         testNR();
         testContact();
         CustomButtonSheetViewTest();
+        testNoti();
     }
 
     private void testContact() {
@@ -179,6 +182,26 @@ public class MainActivity extends AppCompatActivity {
 
         mCustomButtonSheetView.addMenu(mSheetItems);
         mCustomButtonSheetView.show();
+    }
+
+    private NotificationView mNoti;
+    private void testNoti(){
+        mNoti = findViewById(R.id.notification);
+
+        mNoti.ask("Do you agrree?", new NotificationView.AnswerCallback() {
+            @Override
+            public void onAccept() {
+               DLog.e("Acccpete");
+            }
+
+            @Override
+            public void onReject() {
+                DLog.e("Rejected");
+            }
+        });
+        mNoti.showError("Something goes Wrong!", null, 5);
+        //mNoti.showInfo("Something goes Wrong!", null);
+        //mNoti.showSuccess("Something goes Wrong!", null);
     }
 
     @Override
