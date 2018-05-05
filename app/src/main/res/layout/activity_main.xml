@@ -8,10 +8,10 @@
     tools:context="in.co.dipankar.quickandroidexample.MainActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:visibility="visible"
+        android:layout_height="match_parent">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,6 +64,21 @@
             app:civ_dot_color="#27ae60"
             app:civ_border_width="2dp"
             app:civ_border_color="#000000" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <Button
+            android:id="@+id/start_record"
+            android:text="Start Record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/stop_record"
+                android:text="Stop Record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 <!--
     <in.co.dipankar.quickandorid.views.PinSecurityView

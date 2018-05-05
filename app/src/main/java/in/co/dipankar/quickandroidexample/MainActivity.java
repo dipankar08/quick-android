@@ -5,6 +5,8 @@ import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
+import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
 import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
@@ -54,6 +57,43 @@ public class MainActivity extends AppCompatActivity {
         testContact();
         CustomButtonSheetViewTest();
         testNoti();
+        testAudioRecord();
+    }
+
+    private void testAudioRecord() {
+        final AudioRecorderUtil audioRecorderUtil = new AudioRecorderUtil(this);
+        Button startRecord = findViewById(R.id.start_record);
+        Button stopRecord = findViewById(R.id.stop_record);
+        startRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioRecorderUtil.startRecord(new AudioRecorderUtil.Callback() {
+                    @Override
+                    public void onStart() {
+                        DLog.e("Media Recorder Started");
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        DLog.e("Media Reocder Error"+msg);
+                    }
+
+                    @Override
+                    public void onStop(String path) {
+                        DLog.e("Media Stoped"+path);
+                    }
+                });
+            }
+        });
+
+        stopRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioRecorderUtil.stopRecord();
+            }
+        });
+
+
     }
 
     private void testContact() {
