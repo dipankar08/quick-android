@@ -38,11 +38,7 @@ public class AudioRecorderUtil{
     }
 
     public AudioRecorderUtil(Context context){
-        init();
-        File path = new File(FolderPath);
-        if (!path.exists()) {
-            path.mkdirs();
-        }
+
     }
 
     private void init() {
@@ -65,6 +61,11 @@ public class AudioRecorderUtil{
 
             }
         });
+
+        File path = new File(FolderPath);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
     }
 
     public void startRecord( Callback callback){
