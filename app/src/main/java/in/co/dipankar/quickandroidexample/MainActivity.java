@@ -3,6 +3,7 @@ package in.co.dipankar.quickandroidexample;
 import android.Manifest;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
 import in.co.dipankar.quickandorid.views.NotificationView;
+import in.co.dipankar.quickandorid.views.SliderView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +60,71 @@ public class MainActivity extends AppCompatActivity {
         CustomButtonSheetViewTest();
         testNoti();
         testAudioRecord();
+        testSliderView();
+    }
+
+    private void testSliderView() {
+        SliderView sliderView = findViewById(R.id.slider_view);
+        List<SliderView.Item> sliderItem = new ArrayList<SliderView.Item>();
+        sliderItem.add(new SliderView.Item() {
+            @Override
+            public String getTitle() {
+                return "Hello";
+            }
+
+            @Override
+            public String getSubTitle() {
+                return "This is a subtext";
+            }
+
+            @Override
+            public int getImageId() {
+                return R.drawable.ic_0;
+            }
+
+            @Override
+            public String getBackgroundColor() {
+                return "#f190ff";
+            }
+        });
+        sliderItem.add(new SliderView.Item() {
+            @Override
+            public String getTitle() {
+                return "Hello";
+            }
+
+            @Override
+            public String getSubTitle() {
+                return "This is a subtext";
+            }
+
+            @Override
+            public int getImageId() {
+                return R.drawable.ic_1;
+            }
+
+            @Override
+            public String getBackgroundColor() {
+                return "#ff00ff";
+            }
+        });
+        sliderView.init(sliderItem, new SliderView.Callback(){
+
+            @Override
+            public void onSkip() {
+
+            }
+
+            @Override
+            public void onNext() {
+
+            }
+
+            @Override
+            public void onClose() {
+
+            }
+        });
     }
 
     private void testAudioRecord() {

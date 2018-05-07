@@ -58,13 +58,15 @@ public class Network implements INetwork {
     private void _sendInternal(
             final String url, Map<String, String> data, final Callback networkCallback) {
         JSONObject json = new JSONObject();
-        try {
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                json.put(entry.getKey(), entry.getValue());
+        if(data!= null) {
+            try {
+                for (Map.Entry<String, String> entry : data.entrySet()) {
+                    json.put(entry.getKey(), entry.getValue());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
         }
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -84,13 +86,15 @@ public class Network implements INetwork {
 
                             @Override
                             public void onResponse(Response response) throws IOException {
-                                try {
-                                    String jsonData = response.body().string();
-                                    JSONObject Jobject = new JSONObject(jsonData);
-                                    networkCallback.onSuccess(Jobject);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    networkCallback.onError("Internal error happened while parsing the json object");
+                                if (networkCallback != null) {
+                                    try {
+                                        String jsonData = response.body().string();
+                                        JSONObject Jobject = new JSONObject(jsonData);
+                                        networkCallback.onSuccess(Jobject);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        networkCallback.onError("Internal error happened while parsing the json object");
+                                    }
                                 }
                             }
                         });
@@ -105,9 +109,13 @@ public class Network implements INetwork {
             case GET_CACHE_ONLY:
                 JSONObject Jobject = readFromCache(key);
                 if (Jobject == null) {
-                    networkCallback.onError("Cache Not found");
+                    if(networkCallback != null) {
+                        networkCallback.onError("Cache Not found");
+                    }
                 } else {
-                    networkCallback.onSuccess(Jobject);
+                    if(networkCallback != null) {
+                        networkCallback.onSuccess(Jobject);
+                    }
                 }
                 return;
             case GET_LIVE_ONLY:
@@ -118,20 +126,24 @@ public class Network implements INetwork {
                                 new com.squareup.okhttp.Callback() {
                                     @Override
                                     public void onFailure(Request request, IOException e) {
-                                        networkCallback.onError("Internal error:" + e.getMessage());
+                                        if(networkCallback != null) {
+                                            networkCallback.onError("Internal error:" + e.getMessage());
+                                        }
                                     }
 
                                     @Override
                                     public void onResponse(Response response) throws IOException {
-                                        try {
-                                            String jsonData = response.body().string();
-                                            JSONObject Jobject = new JSONObject(jsonData);
-                                            networkCallback.onSuccess(Jobject);
-                                            storeInCache(key, Jobject);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            networkCallback.onError(
-                                                    "Internal error happened while parsing the json object");
+                                        if (networkCallback != null) {
+                                            try {
+                                                String jsonData = response.body().string();
+                                                JSONObject Jobject = new JSONObject(jsonData);
+                                                networkCallback.onSuccess(Jobject);
+                                                storeInCache(key, Jobject);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                networkCallback.onError(
+                                                        "Internal error happened while parsing the json object");
+                                            }
                                         }
                                     }
                                 });
@@ -139,7 +151,9 @@ public class Network implements INetwork {
             case GET_CACHE_ELSE_LIVE:
                 Jobject = readFromCache(key);
                 if (Jobject != null) {
-                    networkCallback.onSuccess(Jobject);
+                    if(networkCallback != null) {
+                        networkCallback.onSuccess(Jobject);
+                    }
                 } else {
                     _retriveInternal(url, CacheControl.GET_LIVE_ONLY, networkCallback);
                 }
@@ -160,7 +174,9 @@ public class Network implements INetwork {
                                         try {
                                             String jsonData = response.body().string();
                                             JSONObject Jobject = new JSONObject(jsonData);
-                                            networkCallback.onSuccess(Jobject);
+                                            if(networkCallback != null) {
+                                                networkCallback.onSuccess(Jobject);
+                                            }
                                             storeInCache(key, Jobject);
                                         } catch (Exception e) {
                                             e.printStackTrace();

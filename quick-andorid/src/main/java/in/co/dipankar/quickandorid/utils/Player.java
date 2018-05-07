@@ -14,21 +14,21 @@ public class Player implements IPlayer {
     // interface
 
     public interface IPlayerCallback {
-        void onTryPlaying(String id);
+        void onTryPlaying(String id, String msg);
 
-        void onSuccess(String id);
+        void onSuccess(String id, String ms);
 
-        void onResume(String id);
+        void onResume(String id, String ms);
 
-        void onPause(String id);
+        void onPause(String id, String ms);
 
-        void onMusicInfo(HashMap<String, Object> info);
+        void onMusicInfo(String id, HashMap<String, Object> info);
 
-        void onSeekBarPossionUpdate(int total, int cur);
+        void onSeekBarPossionUpdate(String id, int total, int cur);
 
-        void onError(String id);
+        void onError(String id, String msg);
 
-        void onComplete(String id);
+        void onComplete(String id, String ms);
     }
 
     // public functions
@@ -58,7 +58,7 @@ public class Player implements IPlayer {
         Log.d(TAG, "Pause Called");
         if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
-            mPlayerCallback.onPause(mTitle);
+            mPlayerCallback.onPause(id, mTitle);
             mIsPaused = true;
         }
     }
@@ -68,7 +68,7 @@ public class Player implements IPlayer {
         Log.d(TAG, "Resume Called");
         if (mPlayer != null && mPlayer.isPlaying() == false) {
             mPlayer.start();
-            mPlayerCallback.onResume(mTitle);
+            mPlayerCallback.onResume(id, mTitle);
             mIsPaused = false;
         }
     }
@@ -77,7 +77,7 @@ public class Player implements IPlayer {
     public void restart() {
         Log.d(TAG, "Restart Called");
         if (mUrl != null) {
-            play(mTitle, mUrl);
+            play(id, mTitle, mUrl);
         }
         mIsPaused = false;
     }
@@ -102,7 +102,7 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void play(final String title, final String url) {
+    public void play(final String id, final String title, final String url) {
         Log.d(TAG, "Play Called");
         mIsPaused = false;
         Thread backgroudThread =
@@ -111,7 +111,7 @@ public class Player implements IPlayer {
                             @Override
                             public void run() {
                                 try {
-                                    playInternal(title, url);
+                                    playInternal(id, title, url);
                                 } catch (final IOException e) {
                                     new Handler(Looper.getMainLooper())
                                             .post(
@@ -127,11 +127,12 @@ public class Player implements IPlayer {
         backgroudThread.start();
     }
 
-    public void playInternal(final String title, final String url) throws IOException {
+    public void playInternal(final String id, final String title, final String url) throws IOException {
         if (url == null) {
             onError1("Invalid URL passed");
             return;
         }
+        this.id = id;
         mUrl = url;
         mTitle = title;
         onTryPlaying(title);
@@ -193,6 +194,7 @@ public class Player implements IPlayer {
     private IPlayerCallback mPlayerCallback;
     private static boolean s_playing = false;
     private static final String TAG = "DIPANKAR :: Player ";
+    private String id;
     private String mUrl;
     private String mTitle;
     private int mTotalDuration;
@@ -204,7 +206,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onError(msg);
+                                mPlayerCallback.onError(id, msg);
                             }
                         });
     }
@@ -215,7 +217,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onTryPlaying(msg);
+                                mPlayerCallback.onTryPlaying(id, msg);
                             }
                         });
     }
@@ -226,7 +228,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onSuccess(msg);
+                                mPlayerCallback.onSuccess(id, msg);
                             }
                         });
     }
@@ -237,7 +239,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onComplete(msg);
+                                mPlayerCallback.onComplete(id, msg);
                             }
                         });
     }
@@ -248,7 +250,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onMusicInfo(info);
+                                mPlayerCallback.onMusicInfo(id, info);
                             }
                         });
     }
@@ -259,7 +261,7 @@ public class Player implements IPlayer {
                         new Runnable() {
                             @Override
                             public void run() {
-                                mPlayerCallback.onSeekBarPossionUpdate(total, cur);
+                                mPlayerCallback.onSeekBarPossionUpdate(id, total, cur);
                             }
                         });
     }

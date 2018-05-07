@@ -1,7 +1,7 @@
 package in.co.dipankar.quickandorid.utils;
 
 public interface IPlayer {
-    void play(String title, String url);
+    void play(String id, String title, String url);
     void stop();
     boolean isPlaying();
     void pause();
