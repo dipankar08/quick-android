@@ -2,7 +2,7 @@ package in.co.dipankar.quickandorid.utils;
 
 public interface IPlayer {
     void play(String id, String title, String url);
-    void stop(); 
+    void stop();
     boolean isPlaying();
     void pause();
     void resume();
