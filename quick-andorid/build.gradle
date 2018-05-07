@@ -20,6 +20,12 @@ android {
     }
 }
 
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -27,6 +33,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
-    implementation 'com.android.support:support-compat:26.0.1'
 }
+apply plugin: 'com.novoda.bintray-release'
 
+publish {
+    groupId = 'com.github.dipankar08'
+    artifactId = 'quick-android'
+    publishVersion = '0.20'
+    desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
+    licences = ['Apache-2.0']
+    uploadName='quickandroid'
+    website = 'https://github.com/stfalcon-studio/ContentManager.git'
+}
