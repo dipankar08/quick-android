@@ -1,3 +1,6 @@
+[![Release](https://jitpack.io/v/User/Repo.svg)]
+(https://jitpack.io/#dipankar08/quick-android)
+
 # quick-android
 This lib is to provides some userful reuseable compoenent in andorid example is shown below.
 1.StateImageButton
