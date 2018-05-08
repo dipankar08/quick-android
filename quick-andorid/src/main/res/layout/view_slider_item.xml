@@ -12,10 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sport"
-        app:customfont="IndieFlower.ttf"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="30dp"
+        android:textSize="24sp"
         android:layout_marginBottom="5dp"
         android:textStyle="bold" />
     <ImageView
@@ -26,12 +25,11 @@
 
     <in.co.dipankar.quickandorid.views.CustomFontTextView
         android:id="@+id/sub_title"
-        app:customfont="IndieFlower.ttf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="The best of sport center!"
         android:textAlignment="center"
         android:textColor="#88ffffff"
-        android:textSize="20dp" />
+        android:textSize="13sp" />
 </LinearLayout>
