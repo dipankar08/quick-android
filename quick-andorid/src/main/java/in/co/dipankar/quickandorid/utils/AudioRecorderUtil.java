@@ -132,7 +132,7 @@ public class AudioRecorderUtil{
             } catch (IOException e) {
                 e.printStackTrace();
                 if (mCallback != null) {
-                    mCallback.onError("Erro while recoring ");
+                    mCallback.onError("Error while recoring ");
                 }
                 stopRecord();
                 deleteFile();
@@ -144,7 +144,15 @@ public class AudioRecorderUtil{
         }
 
     }
-
+    public boolean isRecording(){
+        return isRecording;
+    }
+    public void cancelRecord(){
+        if(isRecording) {
+            stopRecord();
+            deleteFile();
+        }
+    }
     private void deleteFile() {
         File file = new File(mFilePath);
         if (file.exists())

@@ -24,6 +24,7 @@ import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
 import in.co.dipankar.quickandorid.views.NotificationView;
+import in.co.dipankar.quickandorid.views.QuickListView;
 import in.co.dipankar.quickandorid.views.SliderView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 
@@ -61,6 +62,88 @@ public class MainActivity extends AppCompatActivity {
         testNoti();
         testAudioRecord();
         testSliderView();
+        testQuickListView();
+    }
+
+    private QuickListView mQuickListView;
+    private void testQuickListView() {
+        mQuickListView = findViewById(R.id.quicklistview);
+        List<QuickListView.Item> listItems = new ArrayList<>();
+        listItems.add(new QuickListView.Item() {
+            @Override
+            public String getTitle() {
+                return "Dipankar";
+            }
+
+            @Override
+            public String getImageUrl() {
+return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
+            }
+
+            @Override
+            public String getId() {
+                return "8";
+            }
+        });
+        listItems.add(new QuickListView.Item() {
+            @Override
+            public String getTitle() {
+                return "Dipankar";
+            }
+
+            @Override
+            public String getImageUrl() {
+                return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
+            }
+
+            @Override
+            public String getId() {
+                return "8";
+            }
+        });
+        listItems.add(new QuickListView.Item() {
+            @Override
+            public String getTitle() {
+                return "Dipankar";
+            }
+
+            @Override
+            public String getImageUrl() {
+                return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
+            }
+
+            @Override
+            public String getId() {
+                return "8";
+            }
+        });
+        listItems.add(new QuickListView.Item() {
+            @Override
+            public String getTitle() {
+                return "Dipankar";
+            }
+
+            @Override
+            public String getImageUrl() {
+                return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
+            }
+
+            @Override
+            public String getId() {
+                return "8";
+            }
+        });
+        mQuickListView.init(listItems, new QuickListView.Callback() {
+            @Override
+            public void onClick(String id) {
+                DLog.d("onClick: "+id);
+            }
+
+            @Override
+            public void onLongClick(String id) {
+                DLog.d("onLongClick: "+id);
+            }
+        });
     }
 
     private void testSliderView() {
@@ -307,9 +390,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mNoti.showError("Something goes Wrong!", null, 5);
+        mNoti.showAlert("Test",new  NotificationView.AlertCallback(){
+
+            @Override
+            public void onOK() {
+
+            }
+        },"Test");
         //mNoti.showInfo("Something goes Wrong!", null);
         //mNoti.showSuccess("Something goes Wrong!", null);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

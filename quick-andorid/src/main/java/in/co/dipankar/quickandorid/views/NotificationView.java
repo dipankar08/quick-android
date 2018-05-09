@@ -24,6 +24,7 @@ public class NotificationView extends RelativeLayout {
     @Nullable
     private Callback mCallback;
     private AnswerCallback mAnswerCallback;
+    private AlertCallback mAlertCallback;
 
     private TextView mTextView;
     private Button mAccept, mReject;
@@ -36,6 +37,10 @@ public class NotificationView extends RelativeLayout {
     public interface AnswerCallback{
         void onAccept();
         void onReject();
+    }
+
+    public interface AlertCallback{
+        void onOK();
     }
 
     public NotificationView(Context context, AttributeSet attrs, int defStyle) {
@@ -66,6 +71,9 @@ public class NotificationView extends RelativeLayout {
             public void onClick(View v) {
                 if(mAnswerCallback != null){
                     mAnswerCallback.onAccept();
+                }
+                if(mAlertCallback != null){
+                    mAlertCallback.onOK();
                 }
                 hide();
             }
@@ -127,8 +135,14 @@ public class NotificationView extends RelativeLayout {
         autoHide(autoCloseinSec);
     }
 
-    public void ask(String question, AnswerCallback answerCallback){
+    public void ask(String question, AnswerCallback answerCallback) {
+        ask(question, answerCallback, "Accept","Reject");
+    }
+    public void ask(String question, AnswerCallback answerCallback, String accText, String rejText){
         mAnswerCallback = answerCallback;
+        mAccept.setText(accText);
+        mReject.setText(rejText);
+        mReject.setVisibility(VISIBLE);
         mTextView.setText(question);
         mTextView.setBackgroundColor(Color.parseColor("#1f0066"));
         mButtonPanel.setVisibility(VISIBLE);
@@ -138,6 +152,28 @@ public class NotificationView extends RelativeLayout {
         }
     }
 
+
+    public void showAlert(String question, AlertCallback answerCallback) {
+        showAlert(question, answerCallback, "OK");
+    }
+
+    public void showAlert(String question, AlertCallback answerCallback, String accText){
+        mAlertCallback = answerCallback;
+        mAccept.setText(accText);
+        mReject.setVisibility(GONE);
+        mTextView.setText(question);
+        mTextView.setBackgroundColor(Color.parseColor("#1f0066"));
+        mButtonPanel.setVisibility(VISIBLE);
+        this.setVisibility(VISIBLE);
+        if(mCallback != null){
+            mCallback.onOpen();
+        }
+    }
+
+    public void updateText(String msg){
+        mTextView.setText(msg);
+    }
+    
     private void autoHide(int autoCloseinSec){
         if(autoCloseinSec > 0){
             mHandler.postDelayed(new Runnable() {
