@@ -119,7 +119,7 @@ public class QuickListView extends RelativeLayout {
 
             ItemViewHolder(View itemView) {
                 super(itemView);
-                img = (ImageView) itemView.findViewById(R.id.image);
+               img = (ImageView) itemView.findViewById(R.id.this_image);
                 title = (TextView) itemView.findViewById(R.id.title);
             }
         }
@@ -139,10 +139,11 @@ public class QuickListView extends RelativeLayout {
 
         @Override
         public void onBindViewHolder(ItemViewHolder personViewHolder, int i) {
-                personViewHolder.title.setText(nodes.get(i).getTitle());
+                personViewHolder.title.setText(nodes.get(i).getTitle()+"XXX");
                 Glide.with(mContext)
                         .load(nodes.get(i).getImageUrl())
                         .into(personViewHolder.img);
+
         }
 
         public void update(List<Item> datas) {
