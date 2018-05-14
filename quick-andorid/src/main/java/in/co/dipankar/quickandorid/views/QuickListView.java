@@ -40,6 +40,7 @@ public class QuickListView extends RelativeLayout {
     private RecyclerView mRecyclerView;
     private RVAdapter adapter;
     private Context mContext;
+    private int mItemLayout;
 
     public QuickListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -56,9 +57,18 @@ public class QuickListView extends RelativeLayout {
         initView(context);
     }
 
+    public void init( Callback callback) {
+        init(new ArrayList<Item>(),0, callback);
+    }
+
     public void init(List<Item> items, Callback callback) {
+        init(items,0, callback);
+    }
+
+    public void init(List<Item> items, int layoutId, Callback callback) {
         mItemList = items;
         mCallback = callback;
+        mItemLayout = layoutId;
         initItem(items);
     }
 
@@ -69,7 +79,7 @@ public class QuickListView extends RelativeLayout {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        adapter = new RVAdapter(items, mContext);
+        adapter = new RVAdapter(items, mContext,mItemLayout);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnItemTouchListener(
@@ -96,12 +106,14 @@ public class QuickListView extends RelativeLayout {
     private class RVAdapter extends RecyclerView.Adapter<RVAdapter.ItemViewHolder> {
         List<Item> nodes = new ArrayList<>();
         Context mContext;
+        int mItemLayout;
 
-        RVAdapter(List<Item> persons, Context c) {
+        RVAdapter(List<Item> persons, Context c,int mItemLayout) {
             if (persons != null) {
                 this.nodes = persons;
             }
             mContext = c;
+            this.mItemLayout = mItemLayout;
         }
 
         public Item getItem(int idx) {
@@ -119,7 +131,7 @@ public class QuickListView extends RelativeLayout {
 
             ItemViewHolder(View itemView) {
                 super(itemView);
-               img = (ImageView) itemView.findViewById(R.id.this_image);
+               img = (ImageView) itemView.findViewById(R.id.image);
                 title = (TextView) itemView.findViewById(R.id.title);
             }
         }
@@ -131,15 +143,19 @@ public class QuickListView extends RelativeLayout {
 
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v =
-                    LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_quick_list, viewGroup, false);
-            ItemViewHolder pvh = new ItemViewHolder(v);
+            View view;
+            if(mItemLayout == 0) {
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_quick_list, viewGroup, false);
+            } else{
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(mItemLayout, viewGroup, false);
+            }
+            ItemViewHolder pvh = new ItemViewHolder(view);
             return pvh;
         }
 
         @Override
         public void onBindViewHolder(ItemViewHolder personViewHolder, int i) {
-                personViewHolder.title.setText(nodes.get(i).getTitle()+"XXX");
+                personViewHolder.title.setText(nodes.get(i).getTitle());
                 Glide.with(mContext)
                         .load(nodes.get(i).getImageUrl())
                         .into(personViewHolder.img);
@@ -154,6 +170,10 @@ public class QuickListView extends RelativeLayout {
             nodes.addAll(datas);
             notifyDataSetChanged();
         }
+    }
+
+    public void updateList(List<Item> data){
+        adapter.update(data);
     }
 
 

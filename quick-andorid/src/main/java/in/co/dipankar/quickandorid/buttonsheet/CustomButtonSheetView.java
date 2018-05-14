@@ -169,7 +169,7 @@ public class CustomButtonSheetView extends RelativeLayout {
                                 public void onClick(View v) {
                                     AlertDialog alertDialog1 = null;
                                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                                    builder.setTitle("Select the choice");
+                                    builder.setTitle(menu.getName());
                                     final AlertDialog finalAlertDialog = alertDialog1;
                                     builder.setSingleChoiceItems(
                                             menu.getPossibleValue(),

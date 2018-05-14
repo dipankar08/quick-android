@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class AudioRecorderUtil{
+public class AudioRecorderUtil implements IAudioRecorder{
 
-    private static final String FolderPath = Environment.getExternalStorageDirectory() + "/record/";
-    private static final int MAX_LENGTH = 60 * 1000;
+    private static final String FOLDER_PATH = Environment.getExternalStorageDirectory() + "/record/";
+    private static final int MAX_LENGTH = 3 * 60 * 60 * 1000; // 3 hrs
 
 
     public static final int AUDIO_CHANNEL_SINGLE = 1;
@@ -25,17 +25,12 @@ public class AudioRecorderUtil{
 
     private boolean isRecording = false;
 
-    private Callback mCallback;
+    private IAudioRecorder.Callback mCallback;
     private Handler mHandler = new Handler();
 
     private int DEFAULT_RATE  = 300;
     private int DEFAULT_CHANNEL  = 1;
 
-    public interface Callback{
-        void onStart();
-        void onError(String msg);
-        void onStop(String path);
-    }
 
     public AudioRecorderUtil(Context context){
 
@@ -62,13 +57,24 @@ public class AudioRecorderUtil{
             }
         });
 
-        File path = new File(FolderPath);
+        createFile();
+    }
+
+    private File createFile(){
+        File path = new File(FOLDER_PATH);
         if (!path.exists()) {
             path.mkdirs();
         }
+        return path;
     }
 
-    public void startRecord( Callback callback){
+    @Override
+    public void startRecord(String url, Callback callback) {
+
+    }
+
+    @Override
+    public void startRecord(Callback callback){
         mCallback = callback;
         try {
             startRecordInternal();
@@ -79,6 +85,7 @@ public class AudioRecorderUtil{
         }
     }
 
+    @Override
     public void stopRecord(){
         if(isRecording){
             isRecording = false;
@@ -96,6 +103,7 @@ public class AudioRecorderUtil{
         }
     }
 
+    @Override
     public void pauseRecord(){
         if(mMediaRecorder != null){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -104,6 +112,7 @@ public class AudioRecorderUtil{
         }
     }
 
+    @Override
     public void resumeRecord(){
         if(mMediaRecorder != null){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -120,7 +129,7 @@ public class AudioRecorderUtil{
 
         if (!isRecording) {
             try {
-                mFilePath = FolderPath + System.currentTimeMillis() + ".mp4";
+                mFilePath = FOLDER_PATH+"BENGALI_FM_" + System.currentTimeMillis() + ".mp4";
                 mMediaRecorder.setOutputFile(mFilePath);
                 mMediaRecorder.prepare();
                 mMediaRecorder.start();
@@ -144,9 +153,12 @@ public class AudioRecorderUtil{
         }
 
     }
+    @Override
     public boolean isRecording(){
         return isRecording;
     }
+
+    @Override
     public void cancelRecord(){
         if(isRecording) {
             stopRecord();

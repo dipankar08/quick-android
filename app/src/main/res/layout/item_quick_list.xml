@@ -22,7 +22,7 @@
     <in.co.dipankar.quickandorid.views.CustomFontTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/holo_red_dark"
         android:text="Hello World"
         app:customfont="TitilliumWeb-Regular.ttf"
         android:textAlignment="center"
