@@ -125,6 +125,8 @@ public class AudioRecorderUtil implements IAudioRecorder{
 
         if (mMediaRecorder == null) {
             init();
+        } else{
+            cancelRecord();
         }
 
         if (!isRecording) {

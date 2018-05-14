@@ -30,6 +30,12 @@ public class NotificationView extends RelativeLayout {
     private Button mAccept, mReject;
     private View mButtonPanel;
     private Handler mHandler;
+    private Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     public interface Callback {
         void onOpen();
         void onClose();
@@ -139,6 +145,7 @@ public class NotificationView extends RelativeLayout {
         ask(question, answerCallback, "Accept","Reject");
     }
     public void ask(String question, AnswerCallback answerCallback, String accText, String rejText){
+        mHandler.removeCallbacks(mHideRunnable);
         mAnswerCallback = answerCallback;
         mAccept.setText(accText);
         mReject.setText(rejText);
@@ -158,6 +165,7 @@ public class NotificationView extends RelativeLayout {
     }
 
     public void showAlert(String question, AlertCallback answerCallback, String accText){
+        mHandler.removeCallbacks(mHideRunnable);
         mAlertCallback = answerCallback;
         mAccept.setText(accText);
         mReject.setVisibility(GONE);
@@ -176,12 +184,8 @@ public class NotificationView extends RelativeLayout {
     
     private void autoHide(int autoCloseinSec){
         if(autoCloseinSec > 0){
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    hide();
-                }
-            }, autoCloseinSec * 1000);
+            mHandler.removeCallbacks(mHideRunnable);
+            mHandler.postDelayed(mHideRunnable, autoCloseinSec * 1000);
         }
     }
     public void hide(){

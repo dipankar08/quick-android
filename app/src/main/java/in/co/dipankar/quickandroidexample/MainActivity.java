@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
           public String getTitle() {
             return "Dipankar";
           }
+            @Override
+            public String getSubTitle() {
+                return "Subtitle";
+            }
 
           @Override
           public String getImageUrl() {
@@ -89,6 +93,31 @@ public class MainActivity extends AppCompatActivity {
             return "Dipankar";
           }
 
+            @Override
+            public String getSubTitle() {
+                return "Subtitle";
+            }
+
+            @Override
+          public String getImageUrl() {
+            return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
+          }
+
+          @Override
+          public String getId() {
+            return "8";
+          }
+        });
+    listItems.add(
+        new QuickListView.Item() {
+          @Override
+          public String getTitle() {
+            return "Dipankar";
+          }
+            @Override
+            public String getSubTitle() {
+                return "Subtitle";
+            }
           @Override
           public String getImageUrl() {
             return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
@@ -105,24 +134,10 @@ public class MainActivity extends AppCompatActivity {
           public String getTitle() {
             return "Dipankar";
           }
-
-          @Override
-          public String getImageUrl() {
-            return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
-          }
-
-          @Override
-          public String getId() {
-            return "8";
-          }
-        });
-    listItems.add(
-        new QuickListView.Item() {
-          @Override
-          public String getTitle() {
-            return "Dipankar";
-          }
-
+            @Override
+            public String getSubTitle() {
+                return "Subtitle";
+            }
           @Override
           public String getImageUrl() {
             return "https://tse3.mm.bing.net/th?id=OIP.Na5mV4wXkd9qGj6QyrdfdQHaEK&w=264&h=160&c=7&o=5&dpr=2&pid=1.7";
@@ -135,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
         });
     mQuickListView.init(
         listItems,
-        R.layout.item_quick_list,
         new QuickListView.Callback() {
           @Override
           public void onClick(String id) {
@@ -146,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
           public void onLongClick(String id) {
             DLog.d("onLongClick: " + id);
           }
-        });
+        },R.layout.item_quick_list, QuickListView.Type.HORIZONTAL);
   }
 
   private void testSliderView() {

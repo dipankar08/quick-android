@@ -46,7 +46,7 @@ apply plugin: 'com.novoda.bintray-release'
 publish {
     groupId = 'com.github.dipankar08'
     artifactId = 'quick-android'
-    publishVersion = '0.36'
+    publishVersion = '0.39'
     desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
     licences = ['Apache-2.0']
     uploadName='quickandroid'

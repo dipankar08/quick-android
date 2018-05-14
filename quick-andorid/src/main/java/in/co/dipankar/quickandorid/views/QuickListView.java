@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import java.util.List;
 
 import in.co.dipankar.quickandorid.R;
 
+import static in.co.dipankar.quickandorid.views.QuickListView.Type.HORIZONTAL;
+
 public class QuickListView extends RelativeLayout {
 
     public interface Callback {
@@ -30,10 +33,15 @@ public class QuickListView extends RelativeLayout {
 
     public interface Item{
         String getTitle();
+        String getSubTitle();
         String getImageUrl();
         String getId();
     }
 
+    public enum Type{
+        VERTICAL,
+        HORIZONTAL
+    }
     private List<Item> mItemList;
     private Callback mCallback;
 
@@ -41,6 +49,7 @@ public class QuickListView extends RelativeLayout {
     private RVAdapter adapter;
     private Context mContext;
     private int mItemLayout;
+    private Type mType;
 
     public QuickListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -58,17 +67,18 @@ public class QuickListView extends RelativeLayout {
     }
 
     public void init( Callback callback) {
-        init(new ArrayList<Item>(),0, callback);
+        init(new ArrayList<Item>(), callback, 0, HORIZONTAL);
     }
 
     public void init(List<Item> items, Callback callback) {
-        init(items,0, callback);
+        init(items, callback,0, HORIZONTAL );
     }
 
-    public void init(List<Item> items, int layoutId, Callback callback) {
+    public void init(List<Item> items, Callback callback, int layoutId, Type type) {
         mItemList = items;
         mCallback = callback;
         mItemLayout = layoutId;
+        mType = type;
         initItem(items);
     }
 
@@ -77,8 +87,14 @@ public class QuickListView extends RelativeLayout {
         View mRootView = mInflater.inflate(R.layout.view_quick_list, this, true);
         mRecyclerView = (RecyclerView) this.findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager;
+        if(mType == HORIZONTAL) {
+            layoutManager
+                    = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        } else {
+           layoutManager
+                    = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        }
         adapter = new RVAdapter(items, mContext,mItemLayout);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
@@ -126,13 +142,17 @@ public class QuickListView extends RelativeLayout {
         }
 
         public class ItemViewHolder extends RecyclerView.ViewHolder {
+            TextView sl;
             TextView title;
+            TextView subtitle;
             ImageView img;
 
             ItemViewHolder(View itemView) {
                 super(itemView);
-               img = (ImageView) itemView.findViewById(R.id.image);
+                img = (ImageView) itemView.findViewById(R.id.image);
+                sl = (TextView) itemView.findViewById(R.id.sl);
                 title = (TextView) itemView.findViewById(R.id.title);
+                subtitle = (TextView) itemView.findViewById(R.id.subtitle);
             }
         }
 
@@ -155,10 +175,20 @@ public class QuickListView extends RelativeLayout {
 
         @Override
         public void onBindViewHolder(ItemViewHolder personViewHolder, int i) {
-                personViewHolder.title.setText(nodes.get(i).getTitle());
-                Glide.with(mContext)
-                        .load(nodes.get(i).getImageUrl())
-                        .into(personViewHolder.img);
+                if(personViewHolder.title != null) {
+                    personViewHolder.title.setText(nodes.get(i).getTitle());
+                }
+                if(personViewHolder.sl != null) {
+                    personViewHolder.sl.setText((i+1)+"");
+                }
+                if(personViewHolder.subtitle != null) {
+                    personViewHolder.subtitle.setText(Html.fromHtml(nodes.get(i).getSubTitle()), TextView.BufferType.SPANNABLE);
+                }
+                if(personViewHolder.img != null) {
+                    Glide.with(mContext)
+                            .load(nodes.get(i).getImageUrl())
+                            .into(personViewHolder.img);
+                }
 
         }
 
