@@ -15,8 +15,10 @@ import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
+import in.co.dipankar.quickandorid.views.MusicPlayerView;
 import in.co.dipankar.quickandorid.views.NotificationView;
 import in.co.dipankar.quickandorid.views.QuickListView;
+import in.co.dipankar.quickandorid.views.SegmentedControl;
 import in.co.dipankar.quickandorid.views.SliderView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 import java.util.ArrayList;
@@ -58,9 +60,28 @@ public class MainActivity extends AppCompatActivity {
     testAudioRecord();
     testSliderView();
     testQuickListView();
+    testSegmentedButtons();
+    testMusicPlayerView();
   }
 
-  private QuickListView mQuickListView;
+  MusicPlayerView musicPlayerView;
+    private void testMusicPlayerView() {
+        musicPlayerView = findViewById(R.id.playerView);
+        musicPlayerView.play("111","hello","https://bengalimp3songs.in/Midnight Horror Station/Durghotona Midnight Horror Station.mp3");
+    }
+
+    private SegmentedControl segmentedControl;
+    private void testSegmentedButtons() {
+        segmentedControl = findViewById(R.id.sc);
+        segmentedControl.setCallback(new SegmentedControl.Callback() {
+            @Override
+            public void onClicked(int id) {
+                DLog.e("segmentedControl Clicked-->"+id);
+            }
+        });
+    }
+
+    private QuickListView mQuickListView;
 
   private void testQuickListView() {
     mQuickListView = findViewById(R.id.quicklistview);
