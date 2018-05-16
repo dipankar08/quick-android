@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,6 +72,11 @@ public class CustomButtonSheetView extends RelativeLayout {
         LayoutInflater mInflater = LayoutInflater.from(context);
         mRootView = mInflater.inflate(R.layout.view_custom_button_sheet, this, true);
         mMenuHolder = findViewById(R.id.menu_holder);
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            mMenuHolder.setBackgroundColor(Color.BLACK);
+        } else{
+            mMenuHolder.setBackgroundColor(Color.WHITE);
+        }
         mRootView.setOnTouchListener(
                 new OnTouchListener() {
                     @Override

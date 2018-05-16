@@ -37,4 +37,17 @@
     <declare-styleable name="SegmentedControl">
         <attr name="segmentCount" format="integer" />
     </declare-styleable>
+    <declare-styleable name="CTAppTheme">
+        <attr name="primaryTextColor" format="color"/>
+        <attr name="secondaryTextColor" format="color"/>
+        <attr name="primaryBackgroundColor" format="color"/>
+        <attr name="secondaryBackgroundColor" format="color"/>
+        <attr name="inversePrimaryTextColor" format="color"/>
+        <attr name="inverseSecondaryTextColor" format="color"/>
+        <attr name="inverseBackgroundColor" format="color"/>
+
+        <attr name="borderColor" format="color"/>
+        <attr name="dividerColor" format="color"/>
+        <attr name="iconClose" format="integer"/>
+    </declare-styleable>
 </resources>
