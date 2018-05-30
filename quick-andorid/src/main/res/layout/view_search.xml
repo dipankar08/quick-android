@@ -3,22 +3,30 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:hint="Type here to serach"
+        android:padding="5dp"
+        android:textSize="18dp"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
-    <TextView
-        android:id="@+id/search_text"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:text="type here"
-        android:textSize="20dp"
-        android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/search_btn"
+        android:id="@+id/room_btn"
+        android:text="Search Room"
         android:layout_width="wrap_content"
-        android:text="Search"
+        android:layout_marginRight="20dp"
         android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/emp_btn"
+            android:text="Search Emp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_result"

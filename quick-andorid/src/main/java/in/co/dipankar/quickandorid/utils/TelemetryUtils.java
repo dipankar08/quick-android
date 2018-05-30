@@ -3,12 +3,6 @@ package in.co.dipankar.quickandorid.utils;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +12,14 @@ import java.util.Random;
 import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class TelemetryUtils {
 
@@ -97,9 +99,9 @@ public class TelemetryUtils {
             mHttpclient
                     .newCall(request)
                     .enqueue(
-                            new com.squareup.okhttp.Callback() {
+                            new okhttp3.Callback() {
                                 @Override
-                                public void onFailure(Request request, IOException e) {
+                                public void onFailure(Call call, IOException e) {
                                     Log.d(TAG, "TelemetryUtils: onFailure " + e.toString());
                                     if(mCallback != null){
                                         mCallback.onFail();
@@ -107,7 +109,7 @@ public class TelemetryUtils {
                                 }
 
                                 @Override
-                                public void onResponse(Response response) throws IOException {
+                                public void onResponse(Call call, Response response) throws IOException {
                                     Log.d(TAG, "TelemetryUtils: onResponse " + response.toString());
                                     if(mCallback != null){
                                         mCallback.onSuccess();

@@ -5,15 +5,23 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
+import in.co.dipankar.quickandorid.utils.HTTPUtils;
+import in.co.dipankar.quickandorid.utils.HttpdUtils;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
 import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
+import in.co.dipankar.quickandorid.utils.RemoteDebug;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
+import in.co.dipankar.quickandorid.utils.WSUtils;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
 import in.co.dipankar.quickandorid.views.MusicPlayerView;
 import in.co.dipankar.quickandorid.views.NotificationView;
@@ -22,7 +30,9 @@ import in.co.dipankar.quickandorid.views.SegmentedControl;
 import in.co.dipankar.quickandorid.views.SliderView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,9 +72,112 @@ public class MainActivity extends AppCompatActivity {
     testQuickListView();
     testSegmentedButtons();
     testMusicPlayerView();
+    testWebSocket();
+    testHTTPUtils();
+    //testHttpd();
+    testRemoteDebuging();
   }
 
-  MusicPlayerView musicPlayerView;
+    private void testRemoteDebuging() {
+        RemoteDebug remoteDebug = new RemoteDebug(this);
+    }
+
+    private void testHttpd() {
+        HttpdUtils httpdUtils = new HttpdUtils(new HttpdUtils.Callback() {
+
+            @Override
+            public String Handle(String method, String key, Map<String, String> params) {
+                DLog.e("HTTPD - Handle"+key);
+                return key;
+            }
+
+            @Override
+            public void onSuccess(String msg) {
+                DLog.e("HTTPD - Success");
+            }
+
+            @Override
+            public void onError(String msg) {
+                DLog.e("HTTPD - onError");
+            }
+        });
+    }
+
+    private void testHTTPUtils() {
+        HTTPUtils httpUtils = new HTTPUtils();
+        httpUtils.get("http://simplestore.dipankar.co.in/api/test", new HTTPUtils.Callback() {
+            @Override
+            public void onBeforeSend() {
+                DLog.e("HTTPUtils onBeforeSend");
+            }
+
+            @Override
+            public void onSuccess(JSONObject obj)  {
+                try {
+                    DLog.e("HTTPUtils onSuccess"+obj.getString("status"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                DLog.e("HTTPUtils onError");
+            }
+        });
+
+        Map<String, String> data = new HashMap<>();
+        data.put("name", "dipankar");
+        httpUtils.post("http://simplestore.dipankar.co.in/api/test", data, new HTTPUtils.Callback() {
+            @Override
+            public void onBeforeSend() {
+                DLog.e("HTTPUtils onBeforeSend");
+            }
+
+            @Override
+            public void onSuccess(JSONObject obj)  {
+                try {
+                    DLog.e("HTTPUtils onSuccess"+obj.getString("status"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                DLog.e("HTTPUtils onError");
+            }
+        });
+    }
+
+    private void testWebSocket() {
+        WSUtils ws = new WSUtils("ws://echo.websocket.org", new WSUtils.Callback(){
+
+            @Override
+            public void onConnected() {
+                DLog.e("WS onConnected");
+            }
+
+            @Override
+            public void onDisconnected() {
+                DLog.e("WS onDisconnected");
+            }
+
+            @Override
+            public void onMessage(String message) {
+                DLog.e("WS onMessage");
+            }
+
+            @Override
+            public void onError() {
+                DLog.e("WS onError");
+            }
+        });
+        ws.sendMessage("Hello");
+        ws.disconnect();
+    }
+
+    MusicPlayerView musicPlayerView;
     private void testMusicPlayerView() {
         musicPlayerView = findViewById(R.id.playerView);
         musicPlayerView.play("111","hello","https://bengalimp3songs.in/Midnight Horror Station/Durghotona Midnight Horror Station.mp3");
