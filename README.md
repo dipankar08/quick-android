@@ -25,21 +25,22 @@ My simple automation framwork can only do two operation - Actions and Verify.
 ./qt.sh getpref I xyz
 ./qt.sh verify pref I xyz 19
 
-# Test case of Existing an elemnet
+# Verify if an elemnet exising the view hiererchy.
 ./qt.sh verify exist abcde  False
 ./qt.sh verify exist buttonPanel True
 
-# test case for Visiblity
+# Verify if a control or layout is visisble or not!
 ./qt.sh verify visibility abcde VIEW_NOT_FOUND
 ./qt.sh verify visibility buttonPanel True
 
-#Test case for click and long click.
+# Do some operation like click and long click and test for the visisblity.
 ./qt.sh verify visibility notification True
 ./qt.sh action click accept
 ./qt.sh action longclick accept
 ./qt.sh verify visibility notification False
 
-
+# At last stop the app. 
 ./qt.sh stop in.co.dipankar.quickandroidexample
 ```
 
+I will be keep adding new test case as it is required for my app. The main purpose of this automation to keep things simple and stupid - so i will keep avoiding compelex task unless i find a simplified solution for it. For any bug/query/ suggestion- feel free to comment here.
