@@ -7,6 +7,13 @@ The main purpose of the repo to store resuable componet which i have used a tons
 
 # My Own Automation Framewrok.
 I build my new automation framework called "Quick test" Which is as simple as executing some command on your laptop as you have conneted to emulator/device to usb. A very simple test case is as below:
+
+My simple automation framwork can only do two operation - Actions and Verify. 
+- In Actions, it can click, long click any of the exiting elemnets, it can set the input with text or do a random tap anywhere in the screen. It can also do something like setting the android pref etc. 
+- In verify, as the named said, it can verify the property of any view elment and can access the internal ds or state of the application. 
+
+- A very simple and basic example as below.
+
 ```
 #!/bin/sh
 # Step1: First start the app.
