@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,6 +188,11 @@ public class QuickListView extends RelativeLayout {
                 if(personViewHolder.img != null) {
                     Glide.with(mContext)
                             .load(nodes.get(i).getImageUrl())
+                            .apply(new RequestOptions()
+                                    .placeholder(R.drawable.ic_unknown)
+                                    .centerCrop()
+                                    .dontAnimate()
+                                    .dontTransform())
                             .into(personViewHolder.img);
                 }
 

@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/quick-andorid/quick-andorid.iml" filepath="$PROJECT_DIR$/quick-andorid/quick-andorid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/quickandroid.iml" filepath="$PROJECT_DIR$/quickandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/quick-android.iml" filepath="$PROJECT_DIR$/quick-android.iml" />
     </modules>
   </component>
 </project>

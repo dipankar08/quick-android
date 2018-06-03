@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     testSliderView();
     testQuickListView();
     testSegmentedButtons();
-    testMusicPlayerView();
+    //testMusicPlayerView();
     testWebSocket();
     testHTTPUtils();
     //testHttpd();
@@ -79,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
     private void testRemoteDebuging() {
-        RemoteDebug remoteDebug = new RemoteDebug(this);
+        RemoteDebug remoteDebug = new RemoteDebug(this, new RemoteDebug.Provider() {
+            @Override
+            public int getViewId(String id) {
+                return -1;// getResId(id, R.id.class);
+            }
+        });
     }
 
     private void testHttpd() {

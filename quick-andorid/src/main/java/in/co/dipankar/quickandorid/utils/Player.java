@@ -7,45 +7,55 @@ import android.os.Looper;
 import android.util.Log;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Player implements IPlayer {
-    private boolean mIsPaused = false;
-
-    // interface
 
     public interface IPlayerCallback {
         void onTryPlaying(String id, String msg);
-
         void onSuccess(String id, String ms);
-
         void onResume(String id, String ms);
-
         void onPause(String id, String ms);
-
         void onMusicInfo(String id, HashMap<String, Object> info);
-
         void onSeekBarPossionUpdate(String id, int total, int cur);
-
         void onError(String id, String msg);
-
         void onComplete(String id, String ms);
     }
 
-    // public functions
+    private MediaPlayer mPlayer;
+    private IPlayerCallback mPlayerCallback;
+    private String id;
+    private String mUrl;
+    private String mTitle;
+    private int mTotalDuration;
+    private Handler mHandler = new Handler();;
+    private boolean mIsPaused = false;
+
+
     public Player(IPlayerCallback playerCallback) {
         mPlayerCallback = playerCallback;
         init();
     }
 
+    private void init() {
+        if (mPlayer == null) {
+            DLog.d( "creating new instnace of MediaPlayer ");
+            mPlayer = new MediaPlayer();
+            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+    }
+
+
     @Override
-    public void stop() {
+    public void  stop() {
         mIsPaused = false;
         if (mPlayer != null) {
             mPlayer.stop();
-            mPlayer.reset();
+            if(mPlayer != null) {
+                mPlayer.reset();
+            }
             mPlayer = null;
         }
-        s_playing = false;
     }
 
     @Override
@@ -55,7 +65,7 @@ public class Player implements IPlayer {
 
     @Override
     public void pause() {
-        Log.d(TAG, "Pause Called");
+        DLog.d( "Pause Called");
         if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
             mPlayerCallback.onPause(id, mTitle);
@@ -65,7 +75,7 @@ public class Player implements IPlayer {
 
     @Override
     public void resume() {
-        Log.d(TAG, "Resume Called");
+        DLog.d( "Resume Called");
         if (mPlayer != null && mPlayer.isPlaying() == false) {
             mPlayer.start();
             mPlayerCallback.onResume(id, mTitle);
@@ -75,7 +85,7 @@ public class Player implements IPlayer {
 
     @Override
     public void restart() {
-        Log.d(TAG, "Restart Called");
+        DLog.d( "Restart Called");
         if (mUrl != null) {
             play(id, mTitle, mUrl);
         }
@@ -94,80 +104,78 @@ public class Player implements IPlayer {
     }
 
     public void seekTo(int progress) {
-        Log.d(TAG, "Pause Called");
-        if (s_playing) {
-            int msec = (int) (mTotalDuration * (progress / 100.0));
+        DLog.d( "Pause Called");
+        int msec = (int) (mTotalDuration * (progress / 100.0));
+        if (mPlayer != null) {
             mPlayer.seekTo(msec);
         }
     }
 
     @Override
     public void play(final String id, final String title, final String url) {
-        Log.d(TAG, "Play Called");
+        DLog.d( "Play Called");
         mIsPaused = false;
-        Thread backgroudThread =
-                new Thread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    playInternal(id, title, url);
-                                } catch (final IOException e) {
-                                    new Handler(Looper.getMainLooper())
-                                            .post(
-                                                    new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            onError1(e.getMessage());
-                                                        }
-                                                    });
-                                }
-                            }
-                        });
-        backgroudThread.start();
-    }
 
-    public void playInternal(final String id, final String title, final String url) throws IOException {
         if (url == null) {
-            onError1("Invalid URL passed");
+            onErrorInternal("Invalid URL passed");
             return;
         }
         this.id = id;
         mUrl = url;
         mTitle = title;
         onTryPlaying(title);
-
         stop();
         init();
 
+        Thread backgroudThread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    playInternal(url);
+                } catch (final IOException e) {
+                    onErrorInternal("Not able to play this right now.");
+                    DLog.e(e.getMessage());
+                }
+            }
+        });
+        backgroudThread.start();
+    }
+
+    public synchronized void  playInternal( final String url) throws IOException {
+        if(mPlayer == null){
+            onErrorInternal("Not able to play, please retry.");
+            return;
+        }
         try {
             mPlayer.setDataSource(url);
             mPlayer.prepareAsync();
         } catch (final Exception e) {
-            onError1("Not able to play because of:" + e.getMessage());
+            DLog.d("Not able to play because of:" + e.getMessage());
+            onErrorInternal("Not able to play this right now.");
             stop();
             e.printStackTrace();
-        } finally {
-
+            return;
         }
-        // if we ave an excpetion at this points let's return.
-        if (mPlayer == null) return;
-
         mPlayer.setOnPreparedListener(
                 new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer player) {
+                        if(mPlayer == null){
+                            return;
+                        }
                         mPlayer.start();
                         mTotalDuration = mPlayer.getDuration();
-                        onSuccess(title);
-                        onMusicInfo(
-                                new HashMap<String, Object>() {
-                                    {
-                                        put("CurrentPosition", mPlayer.getCurrentPosition());
-                                        put("Duration", mPlayer.getDuration());
-                                        put("count", "1");
-                                    }
-                                });
+                        onSuccess(mTitle);
+                        if(mPlayer != null) {
+                            onMusicInfo(
+                                    new HashMap<String, Object>() {
+                                        {
+                                            put("CurrentPosition", mPlayer.getCurrentPosition());
+                                            put("Duration", mPlayer.getDuration());
+                                            put("count", "1");
+                                        }
+                                    });
+                        }
                         // schedule the update timer
                         mHandler.postDelayed(mUpdateTimeTask, 1000);
                     }
@@ -176,114 +184,81 @@ public class Player implements IPlayer {
                 new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
-                        onComplete(title);
+                        onComplete(mTitle);
                     }
                 });
         mPlayer.setOnErrorListener(
                 new MediaPlayer.OnErrorListener() {
                     public boolean onError(MediaPlayer mp, int what, final int extra) {
-                        onError1("MediaPlayer error happened");
+                        onErrorInternal("Not able to play this right now.");
                         return true;
                     }
                 });
-        s_playing = true;
     }
 
-    // private
-    private static MediaPlayer mPlayer;
-    private IPlayerCallback mPlayerCallback;
-    private static boolean s_playing = false;
-    private static final String TAG = "DIPANKAR :: Player ";
-    private String id;
-    private String mUrl;
-    private String mTitle;
-    private int mTotalDuration;
-    private Handler mHandler = new Handler();;
-
-    private void onError1(final String msg) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onError(id, msg);
-                            }
-                        });
+    private void onErrorInternal(final String msg) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onError(id, msg);
+            }
+        });
     }
 
     private void onTryPlaying(final String msg) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onTryPlaying(id, msg);
-                            }
-                        });
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onTryPlaying(id, msg);
+            }
+        });
     }
 
     private void onSuccess(final String msg) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onSuccess(id, msg);
-                            }
-                        });
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onSuccess(id, msg);
+            }
+        });
     }
 
     private void onComplete(final String msg) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onComplete(id, msg);
-                            }
-                        });
+        new Handler(Looper.getMainLooper()).post( new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onComplete(id, msg);
+            }
+        });
     }
 
     private void onMusicInfo(final HashMap<String, Object> info) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onMusicInfo(id, info);
-                            }
-                        });
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onMusicInfo(id, info);
+            }
+        });
     }
 
     private void onSeekBarPossionUpdate(final int total, final int cur) {
-        new Handler(Looper.getMainLooper())
-                .post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerCallback.onSeekBarPossionUpdate(id, total, cur);
-                            }
-                        });
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerCallback.onSeekBarPossionUpdate(id, total, cur);
+            }
+        });
     }
 
-    private Runnable mUpdateTimeTask =
-            new Runnable() {
-                public void run() {
-                    if (mPlayer != null && mPlayer.isPlaying()) {
-                        int totalDuration = mPlayer.getDuration();
-                        int currentDuration = mPlayer.getCurrentPosition();
-                        onSeekBarPossionUpdate(totalDuration, currentDuration);
-                        mHandler.postDelayed(this, 1000);
-                    }
-                }
-            };
-
-    // private functions.
-    private void init() {
-        if (mPlayer == null) {
-            Log.d(TAG, "creating new instnace of MediaPlayer ");
-            mPlayer = new MediaPlayer();
-            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            if (mPlayer != null && mPlayer.isPlaying()) {
+                int totalDuration = mPlayer.getDuration();
+                int currentDuration = mPlayer.getCurrentPosition();
+                onSeekBarPossionUpdate(totalDuration, currentDuration);
+                mHandler.postDelayed(this, 1000);
+            }
         }
-    }
+    };
+
 }
