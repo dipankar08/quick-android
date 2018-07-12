@@ -12,8 +12,10 @@ import org.json.JSONObject;
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
+import in.co.dipankar.quickandorid.utils.AlarmUtils;
 import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
+import in.co.dipankar.quickandorid.utils.GateKeeperUtils;
 import in.co.dipankar.quickandorid.utils.HTTPUtils;
 import in.co.dipankar.quickandorid.utils.HttpdUtils;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
@@ -76,7 +78,45 @@ public class MainActivity extends AppCompatActivity {
     testHTTPUtils();
     //testHttpd();
     testRemoteDebuging();
+    testAlarm();
+    testGK();
   }
+
+    private void testGK() {
+        // http://simplestore.dipankar.co.in/api/gk_test?_cmd=insert&gk_name=feature2&gk_vlaue=false
+        final GateKeeperUtils gateKeeperUtils = new GateKeeperUtils(this, "http://simplestore.dipankar.co.in/api/gk_test");
+        gateKeeperUtils.init(new GateKeeperUtils.Callback() {
+            @Override
+            public void onSuccess() {
+                DLog.d("GK Loaded Sucess");
+                DLog.d("GK isFeatureEnabled: " +gateKeeperUtils.isFeatureEnabled("feature1", false));
+                DLog.d("GK isFeatureEnabled: " +gateKeeperUtils.isFeatureEnabled("feature2", false));
+                DLog.d("GK isDebugOnlyFeature: " +gateKeeperUtils.isDebugOnlyFeature());
+                DLog.d("GK getRemoteSetting: " +gateKeeperUtils.getRemoteSetting("config1","null"));
+                DLog.d("GK getRemoteSetting: " +gateKeeperUtils.getRemoteSetting("config2","null"));
+            }
+
+            @Override
+            public void onError() {
+                DLog.d("GK Loaded failed");
+            }
+        });
+    }
+
+    private void testAlarm() {
+        AlarmUtils alarmUtils = new AlarmUtils(this, new AlarmUtils.Callback() {
+            @Override
+            public void onSetAlarm(String id) {
+                DLog.d("AlarmUtils: set success, id:"+id);
+            }
+
+            @Override
+            public void onCancelAlarm(String id) {
+                DLog.d("AlarmUtils: cancel success, id:"+id);
+            }
+        });
+        alarmUtils.setAlarm(00,01,null);
+    }
 
     private void testRemoteDebuging() {
         RemoteDebug remoteDebug = new RemoteDebug(this, new RemoteDebug.Provider() {
@@ -291,12 +331,12 @@ public class MainActivity extends AppCompatActivity {
         listItems,
         new QuickListView.Callback() {
           @Override
-          public void onClick(String id) {
+          public void onClick(QuickListView.Item id) {
             DLog.d("onClick: " + id);
           }
 
           @Override
-          public void onLongClick(String id) {
+          public void onLongClick(QuickListView.Item id) {
             DLog.d("onLongClick: " + id);
           }
         },R.layout.item_quick_list, QuickListView.Type.HORIZONTAL);

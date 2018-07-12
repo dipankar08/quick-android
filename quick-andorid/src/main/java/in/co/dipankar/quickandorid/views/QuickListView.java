@@ -28,8 +28,8 @@ import static in.co.dipankar.quickandorid.views.QuickListView.Type.HORIZONTAL;
 public class QuickListView extends RelativeLayout {
 
     public interface Callback {
-        void onClick(String id);
-        void onLongClick(String id);
+        void onClick(Item id);
+        void onLongClick(Item id);
     }
 
     public interface Item{
@@ -103,12 +103,12 @@ public class QuickListView extends RelativeLayout {
                 new RecyclerItemClickListener(mContext, mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         if(mCallback != null){
-                            mCallback.onClick(mItemList.get(position).getId());
+                            mCallback.onClick(mItemList.get(position));
                         }
                     }
                     @Override public void onLongItemClick(View view, int position) {
                         if(mCallback != null){
-                            mCallback.onLongClick(mItemList.get(position).getId());
+                            mCallback.onLongClick(mItemList.get(position));
                         }
                     }
                 })

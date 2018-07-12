@@ -20,12 +20,22 @@ public class GateKeeperUtils {
     Map<String, String> configMap;
     private Context mContext;
     private INetwork mNetwork;
-
+    private Callback mCallback;
+    private String mUrl;
+    public interface Callback{
+         void onSuccess();
+         void onError();
+    }
     // Constractuter
-    public void GateKeeperUtils(Context context, INetwork network, String remoteUrl) {
+    public  GateKeeperUtils(Context context, String remoteUrl) {
         mContext = context;
-        mNetwork = network;
-        _downlaodAndSaveRemoteConfirg(remoteUrl);
+        mNetwork = new Network(context, true);
+        mUrl = remoteUrl;
+    }
+
+    public void init(Callback callback){
+        mCallback = callback;
+        _downlaodAndSaveRemoteConfirg(mUrl);
     }
 
     // Call this function to verify if the this feature is enabled
@@ -112,14 +122,24 @@ public class GateKeeperUtils {
                                         editor.apply();
                                         Log.d(TAG, "GateKeep configuration loaded successfully!");
                                     }
+                                    if(mCallback != null){
+                                        mCallback.onSuccess();
+                                    }
                                 } catch (JSONException e) {
                                     Log.d(TAG, "ERROR104" + e.getMessage());
                                     e.printStackTrace();
+                                    if(mCallback != null){
+                                        mCallback.onError();
+                                    }
                                 }
                             }
 
                             @Override
-                            public void onError(String msg) {}
+                            public void onError(String msg) {
+                                if(mCallback != null){
+                                    mCallback.onError();
+                                }
+                            }
                         });
     }
 }

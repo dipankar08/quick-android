@@ -50,4 +50,9 @@
         <attr name="dividerColor" format="color"/>
         <attr name="iconClose" format="integer"/>
     </declare-styleable>
+    <declare-styleable name="FtuxView">
+        <attr name="app_name" format="string" />
+        <attr name="status" format="string" />
+        <attr name="logo" format="reference"  />
+    </declare-styleable>
 </resources>
