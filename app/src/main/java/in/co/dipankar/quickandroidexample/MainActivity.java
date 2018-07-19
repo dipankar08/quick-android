@@ -15,6 +15,7 @@ import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.utils.AlarmUtils;
 import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
+import in.co.dipankar.quickandorid.utils.DialogUtils;
 import in.co.dipankar.quickandorid.utils.GateKeeperUtils;
 import in.co.dipankar.quickandorid.utils.HTTPUtils;
 import in.co.dipankar.quickandorid.utils.HttpdUtils;
@@ -27,6 +28,7 @@ import in.co.dipankar.quickandorid.utils.WSUtils;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
 import in.co.dipankar.quickandorid.views.MusicPlayerView;
 import in.co.dipankar.quickandorid.views.NotificationView;
+import in.co.dipankar.quickandorid.views.PinView;
 import in.co.dipankar.quickandorid.views.QuickListView;
 import in.co.dipankar.quickandorid.views.SegmentedControl;
 import in.co.dipankar.quickandorid.views.SliderView;
@@ -80,7 +82,42 @@ public class MainActivity extends AppCompatActivity {
     testRemoteDebuging();
     testAlarm();
     testGK();
+    testPinView();
+
   }
+
+    private void testPinView() {
+        final PinView mPinView = findViewById(R.id.pin);
+        Button mClean = findViewById(R.id.pin_clear);
+        mClean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPinView.onClear();
+                mPinView.shakePinBox();
+            }
+        });
+        mPinView.setCallback(new PinView.Callback() {
+            @Override
+            public void onPinComplete(String pin) {
+                DLog.d("onPinComplete: "+pin);
+            }
+        });
+    }
+
+    public void testDialog1(View view) {
+
+        DialogUtils.showFeedbackDialog(this, new DialogUtils.FeedbackCallback() {
+            @Override
+            public void onSubmit(float rating, String message) {
+                DLog.d("DialogUtils::onSubmit"+rating+message);
+            }
+
+            @Override
+            public void onDismiss() {
+                DLog.d("DialogUtils::onDismiss");
+            }
+        });
+    }
 
     private void testGK() {
         // http://simplestore.dipankar.co.in/api/gk_test?_cmd=insert&gk_name=feature2&gk_vlaue=false
@@ -613,4 +650,24 @@ public class MainActivity extends AppCompatActivity {
     RuntimePermissionUtils.getInstance()
         .onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
+
+
+    public void testReportDialog(View view) {
+      DialogUtils.showReportDialog(this, new DialogUtils.ReportCallback() {
+          @Override
+          public void onSubmit(String type, String message) {
+              DLog.d("Type:"+type+" Message:"+message);
+          }
+
+          @Override
+          public void onDismiss() {
+            DLog.d("DialogUtils::onDismiss called");
+          }
+      });
+    }
+
+    public void testAboutDialog(View view) {
+      DialogUtils.showAboutDialog(this, "Some Text Here. Some Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text Here");
+
+    }
 }

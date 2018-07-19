@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="How was your experience with us?"
+        android:layout_width="250dp"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"/>
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/result"
+        android:textColor="#555555"
+        android:text="Love it"
+        android:textSize="15dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="3"
+        android:hint="Any other feedback (Optional)"/>
+</LinearLayout>

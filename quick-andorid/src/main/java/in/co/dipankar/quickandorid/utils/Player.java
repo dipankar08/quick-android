@@ -176,7 +176,7 @@ public class Player implements IPlayer {
                                         }
                                     });
                         }
-                        // schedule the update timer
+                        // schedule the refreshUI timer
                         mHandler.postDelayed(mUpdateTimeTask, 1000);
                     }
                 });

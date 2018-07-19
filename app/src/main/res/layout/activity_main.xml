@@ -1,89 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#ffffff"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context="in.co.dipankar.quickandroidexample.MainActivity">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/pin_clear"
+        android:text="Clear PIN"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content" />
+
+    <in.co.dipankar.quickandorid.views.PinView
+        android:id="@+id/pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="Test About dialog"
+        android:onClick="testAboutDialog"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:text="Test Report dialog"
+        android:onClick="testReportDialog"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="Test Feedback dialog"
+        android:onClick="testDialog1"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <in.co.dipankar.quickandorid.views.StateImageButton
+        android:id="@+id/state1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:disable_background="@drawable/bg_circle_black"
+        app:enable_background="@drawable/bg_circle_white"
+        app:disable_src= "@drawable/ic_mute_off"
+        app:enable_src= "@drawable/ic_mute_on"
+        app:is_enable="false"
+        />
+
+    <in.co.dipankar.quickandorid.views.MultiStateImageButton
+        android:id="@+id/state2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundState0="@drawable/ic_0"
+        app:backgroundState1="@drawable/ic_1"
+        app:backgroundState2="@drawable/ic_2"
+        app:backgroundState3="@drawable/ic_3"
+        app:backgroundState4="@drawable/ic_4"
+        app:backgroundState5="@drawable/ic_5"
+        app:backgroundState6="@drawable/ic_6"
+        app:backgroundState7="@drawable/ic_7"
+        app:backgroundState8="@drawable/ic_8"
+        app:current_state="5"
+        />
+    <in.co.dipankar.quickandorid.views.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:textColor="#27ae60"
+        app:customfont="IndieFlower.ttf"
+        android:text="Hello World"
+        android:textSize="20dp"
+        android:layout_height="wrap_content" />
+
+    <in.co.dipankar.quickandorid.views.CircleImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/rabi"
+        app:civ_dot_width="10dp"
+        app:civ_dot_color="#27ae60"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#000000" />
+
+    <Button
+        android:id="@+id/start_record"
+        android:text="Start Record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/stop_record"
+        android:text="Stop Record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <in.co.dipankar.quickandorid.views.QuickListView
+        android:id="@+id/quicklistview"
+        android:layout_width="match_parent"
         android:visibility="visible"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <in.co.dipankar.quickandorid.views.StateImageButton
-            android:id="@+id/state1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:disable_background="@drawable/bg_circle_black"
-            app:enable_background="@drawable/bg_circle_white"
-            app:disable_src= "@drawable/ic_mute_off"
-            app:enable_src= "@drawable/ic_mute_on"
-            app:is_enable="false"
-            />
-
-        <in.co.dipankar.quickandorid.views.MultiStateImageButton
-            android:id="@+id/state2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundState0="@drawable/ic_0"
-            app:backgroundState1="@drawable/ic_1"
-            app:backgroundState2="@drawable/ic_2"
-            app:backgroundState3="@drawable/ic_3"
-            app:backgroundState4="@drawable/ic_4"
-            app:backgroundState5="@drawable/ic_5"
-            app:backgroundState6="@drawable/ic_6"
-            app:backgroundState7="@drawable/ic_7"
-            app:backgroundState8="@drawable/ic_8"
-            app:current_state="5"
-            />
-        <in.co.dipankar.quickandorid.views.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:textColor="#27ae60"
-            app:customfont="IndieFlower.ttf"
-            android:text="Hello World"
-            android:textSize="20dp"
-            android:layout_height="wrap_content" />
-
-        <in.co.dipankar.quickandorid.views.CircleImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/rabi"
-            app:civ_dot_width="10dp"
-            app:civ_dot_color="#27ae60"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#000000" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <Button
-            android:id="@+id/start_record"
-            android:text="Start Record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-            <Button
-                android:id="@+id/stop_record"
-                android:text="Stop Record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <in.co.dipankar.quickandorid.views.QuickListView
-            android:id="@+id/quicklistview"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"/>
 
         <in.co.dipankar.quickandorid.views.SegmentedControl
             android:id="@+id/sc"
@@ -120,14 +143,14 @@
                 android:layout_height="30dp"
                 android:text="Dummy"/>
         </in.co.dipankar.quickandorid.views.SegmentedControl>
-        <in.co.dipankar.quickandorid.views.MusicPlayerView
-            android:id="@+id/playerView"
-            android:textAllCaps="false"
-            android:padding="0dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dummy"/>
-    </LinearLayout>
+
+    <in.co.dipankar.quickandorid.views.MusicPlayerView
+        android:id="@+id/playerView"
+        android:textAllCaps="false"
+        android:padding="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dummy"/>
 <!--
     <in.co.dipankar.quickandorid.views.PinSecurityView
         android:layout_width="match_parent"
@@ -138,10 +161,11 @@
         android:id="@+id/custom_endbutton_sheetview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<in.co.dipankar.quickandorid.views.NotificationView
-    android:id="@+id/notification"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+
+    <in.co.dipankar.quickandorid.views.NotificationView
+        android:id="@+id/notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <in.co.dipankar.quickandorid.views.SliderView
         android:id="@+id/slider_view"
@@ -149,9 +173,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-
-
-
-
-
-</RelativeLayout>
+</LinearLayout>
