@@ -1,9 +1,11 @@
 package in.co.dipankar.quickandorid.utils;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ public class Player implements IPlayer {
     }
 
     private MediaPlayer mPlayer;
+    private Context mContext;
     private IPlayerCallback mPlayerCallback;
     private String id;
     private String mUrl;
@@ -32,8 +35,9 @@ public class Player implements IPlayer {
     private boolean mIsPaused = false;
 
 
-    public Player(IPlayerCallback playerCallback) {
+    public Player(Context context, IPlayerCallback playerCallback) {
         mPlayerCallback = playerCallback;
+        mContext = context;
         init();
     }
 
@@ -42,6 +46,8 @@ public class Player implements IPlayer {
             DLog.d( "creating new instnace of MediaPlayer ");
             mPlayer = new MediaPlayer();
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mPlayer.setScreenOnWhilePlaying(true);
+            mPlayer.setWakeMode(mContext, PowerManager.PARTIAL_WAKE_LOCK);
         }
     }
 
@@ -126,7 +132,12 @@ public class Player implements IPlayer {
         onTryPlaying(title);
         stop();
         init();
-
+        try {
+            playInternal(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/*
         Thread backgroudThread = new Thread( new Runnable() {
             @Override
             public void run() {
@@ -138,10 +149,12 @@ public class Player implements IPlayer {
                 }
             }
         });
+
         backgroudThread.start();
+        */
     }
 
-    public synchronized void  playInternal( final String url) throws IOException {
+    private synchronized void  playInternal( final String url) throws IOException {
         if(mPlayer == null){
             onErrorInternal("Not able to play, please retry.");
             return;

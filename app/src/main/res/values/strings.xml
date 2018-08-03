@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">quickandroidExample</string>
+    <string name="facebook_app_id">2056968731219047</string>
+    <string name="fb_login_protocol_scheme">fb2056968731219047</string>
+
+        <string name="twitter_consumer_key" translatable="false">FdOeV5UAAtQRwY7Ib0QMf4Ca9</string>
+        <string name="twitter_consumer_secret" translatable="false">ke3x2zcXCUP6iZ7dzV5M1Lwi05o49Y59E0x3D0iDLuCAr3sR4j</string>
+
 </resources>

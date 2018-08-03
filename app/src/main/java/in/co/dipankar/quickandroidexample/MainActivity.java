@@ -1,10 +1,13 @@
 package in.co.dipankar.quickandroidexample;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import com.facebook.FacebookSdk;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +24,7 @@ import in.co.dipankar.quickandorid.utils.HTTPUtils;
 import in.co.dipankar.quickandorid.utils.HttpdUtils;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
 import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
+import in.co.dipankar.quickandorid.utils.Player;
 import in.co.dipankar.quickandorid.utils.RemoteDebug;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
@@ -32,7 +36,10 @@ import in.co.dipankar.quickandorid.views.PinView;
 import in.co.dipankar.quickandorid.views.QuickListView;
 import in.co.dipankar.quickandorid.views.SegmentedControl;
 import in.co.dipankar.quickandorid.views.SliderView;
+import in.co.dipankar.quickandorid.views.SocialLoginView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
+import in.co.dipankar.quickandorid.views.UserInfo;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+     // FacebookSdk.sdkInitialize(this);
     setContentView(R.layout.activity_main);
 
     StateImageButton state1 = (StateImageButton) findViewById(R.id.state1);
@@ -83,9 +92,37 @@ public class MainActivity extends AppCompatActivity {
     testAlarm();
     testGK();
     testPinView();
+    testLogin();
 
   }
 
+    SocialLoginView mloginView;
+   private void testLogin() {
+        mloginView = findViewById(R.id.login);
+        DLog.d("#Login Did someone login ? Ans: "+mloginView.getUserInfo());
+        mloginView.setCallback(new SocialLoginView.Callback() {
+            @Override
+            public void onSuccess(UserInfo userInfo) {
+                DLog.d("#Login::onSuccess called:"+userInfo);
+            }
+
+            @Override
+            public void onFail(SocialLoginView.Type type, String msg) {
+                DLog.d("#Login::onFailed called");
+            }
+
+            @Override
+            public void onCancel() {
+                DLog.d("#Login::onCancel called");
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mloginView.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     private void testPinView() {
         final PinView mPinView = findViewById(R.id.pin);
         Button mClean = findViewById(R.id.pin_clear);
@@ -669,5 +706,60 @@ public class MainActivity extends AppCompatActivity {
     public void testAboutDialog(View view) {
       DialogUtils.showAboutDialog(this, "Some Text Here. Some Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text HereSome Text Here");
 
+    }
+
+    /*****  Test Player  ****/
+    Player mPlayer;
+    public void startPlayer(View view) {
+        if(mPlayer != null) return;
+        mPlayer = new Player(this, new Player.IPlayerCallback() {
+            @Override
+            public void onTryPlaying(String id, String msg) {
+                DLog.d("onTryPlaying called");
+            }
+
+            @Override
+            public void onSuccess(String id, String ms) {
+                DLog.d("onSuccess called");
+            }
+
+            @Override
+            public void onResume(String id, String ms) {
+                DLog.d("onResume called");
+            }
+
+            @Override
+            public void onPause(String id, String ms) {
+                DLog.d("onPause called");
+            }
+
+            @Override
+            public void onMusicInfo(String id, HashMap<String, Object> info) {
+                DLog.d("onMusicInfo called");
+            }
+
+            @Override
+            public void onSeekBarPossionUpdate(String id, int total, int cur) {
+                DLog.d("onSeekBarPossionUpdate called");
+            }
+
+            @Override
+            public void onError(String id, String msg) {
+                DLog.d("onError called");
+            }
+
+            @Override
+            public void onComplete(String id, String ms) {
+                DLog.d("onComplete called");
+            }
+        });
+    mPlayer.play(
+        "1", "Test", "https://av.voanews.com/clips/VBA/2015/10/31/20151031-160000-VBA043-program.mp3");
+    }
+
+    public void stopPlayer(View view) {
+        if(mPlayer!=null){
+            mPlayer.stop();
+        }
     }
 }

@@ -103,7 +103,7 @@ public class MusicPlayerView extends LinearLayout {
     }
 
     private void initPlayer() {
-        mPlayer = new Player(new Player.IPlayerCallback() {
+        mPlayer = new Player(getContext(), new Player.IPlayerCallback() {
             @Override
             public void onTryPlaying(String id, String msg) {
                 mPlayPause.setImageResource(R.drawable.ic_pause_grey_24);
