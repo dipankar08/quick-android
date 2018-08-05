@@ -14,6 +14,7 @@
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             />
         <Button
             android:layout_width="match_parent"
@@ -44,8 +45,7 @@
         <Button
             android:text="Test About dialog"
             android:onClick="testAboutDialog"
-            android:layout_marginTop="70dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -53,14 +53,14 @@
         <Button
             android:text="Test Report dialog"
             android:onClick="testReportDialog"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
             android:text="Test Feedback dialog"
             android:onClick="testDialog1"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -91,6 +91,7 @@
             app:backgroundState7="@drawable/ic_7"
             app:backgroundState8="@drawable/ic_8"
             app:current_state="5"
+            android:layout_marginBottom="10dp"
             />
         <in.co.dipankar.quickandorid.views.CustomFontTextView
             android:layout_width="wrap_content"
@@ -98,7 +99,8 @@
             app:customfont="IndieFlower.ttf"
             android:text="Hello World"
             android:textSize="20dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.CircleImageView
             android:layout_width="120dp"
@@ -108,19 +110,22 @@
             app:civ_dot_width="10dp"
             app:civ_dot_color="#27ae60"
             app:civ_border_width="2dp"
+            android:layout_marginBottom="10dp"
             app:civ_border_color="#000000" />
 
         <Button
             android:id="@+id/start_record"
             android:text="Start Record"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/stop_record"
             android:text="Stop Record"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.MusicPlayerView
             android:id="@+id/playerView"
@@ -128,39 +133,46 @@
             android:padding="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dummy"/>
+            android:text="Dummy"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.PinSecurityView
             android:layout_width="match_parent"
             android:visibility="gone"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView
             android:id="@+id/custom_endbutton_sheetview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.NotificationView
             android:id="@+id/notification"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.SliderView
             android:id="@+id/slider_view"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"/>
         <in.co.dipankar.quickandorid.views.QuickListView
             android:id="@+id/quicklistview"
             android:layout_width="match_parent"
             android:visibility="visible"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
         <in.co.dipankar.quickandorid.views.SegmentedControl
             android:id="@+id/sc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             app:segmentCount="2">
             <in.co.dipankar.quickandorid.views.SegmentedButton
                 android:id="@+id/testButton"
@@ -192,43 +204,43 @@
                 android:text="Dummy"/>
         </in.co.dipankar.quickandorid.views.SegmentedControl>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="StartPlayer"
+            android:onClick="startPlayer"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="StartPlayer"
+            android:onClick="stopPlayer"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="playPausePalyer"
+            android:onClick="playPausePalyer"
+            />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Forgroud Service StartPlayer"
+            android:onClick="stopPlayerService"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Forground Service playPausePalyer"
+            android:onClick="playPausePalyerService"
+            />
+
     </LinearLayout>
-<!--
-<LinearLayout
-    android:visibility="gone"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="800dp" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:onClick="startPlayer"
-        android:text="startPlayer"/>
-
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:onClick="stopPlayer"
-        android:text="stopPlayer"/>
-
-
-
-
-
-
-
-
-
-
-</LinearLayout>
--->
 </ScrollView>

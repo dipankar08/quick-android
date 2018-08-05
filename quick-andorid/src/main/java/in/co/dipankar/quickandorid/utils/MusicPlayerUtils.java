@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Player implements IPlayer {
+/**
+ * This provides a correct music player utils for all func
+ */
+public class MusicPlayerUtils {
 
     public interface IPlayerCallback {
         void onTryPlaying(String id, String msg);
@@ -35,7 +38,7 @@ public class Player implements IPlayer {
     private boolean mIsPaused = false;
 
 
-    public Player(Context context, IPlayerCallback playerCallback) {
+    public MusicPlayerUtils(Context context, IPlayerCallback playerCallback) {
         mPlayerCallback = playerCallback;
         mContext = context;
         init();
@@ -43,133 +46,12 @@ public class Player implements IPlayer {
 
     private void init() {
         if (mPlayer == null) {
-            DLog.d( "creating new instnace of MediaPlayer ");
+            DLog.d( "MusicPlayerUtils::init called");
             mPlayer = new MediaPlayer();
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mPlayer.setScreenOnWhilePlaying(true);
             mPlayer.setWakeMode(mContext, PowerManager.PARTIAL_WAKE_LOCK);
-        }
-    }
-
-
-    @Override
-    public void  stop() {
-        mIsPaused = false;
-        if (mPlayer != null) {
-            mPlayer.stop();
-            if(mPlayer != null) {
-                mPlayer.reset();
-            }
-            mPlayer = null;
-        }
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return mPlayer != null && mPlayer.isPlaying();
-    }
-
-    @Override
-    public void pause() {
-        DLog.d( "Pause Called");
-        if (mPlayer != null && mPlayer.isPlaying()) {
-            mPlayer.pause();
-            mPlayerCallback.onPause(id, mTitle);
-            mIsPaused = true;
-        }
-    }
-
-    @Override
-    public void resume() {
-        DLog.d( "Resume Called");
-        if (mPlayer != null && mPlayer.isPlaying() == false) {
-            mPlayer.start();
-            mPlayerCallback.onResume(id, mTitle);
-            mIsPaused = false;
-        }
-    }
-
-    @Override
-    public void restart() {
-        DLog.d( "Restart Called");
-        if (mUrl != null) {
-            play(id, mTitle, mUrl);
-        }
-        mIsPaused = false;
-    }
-
-    @Override
-    public void mute() {}
-
-    @Override
-    public void unmute() {}
-
-    @Override
-    public boolean isPaused() {
-        return mIsPaused;
-    }
-
-    public void seekTo(int progress) {
-        DLog.d( "Pause Called");
-        int msec = (int) (mTotalDuration * (progress / 100.0));
-        if (mPlayer != null) {
-            mPlayer.seekTo(msec);
-        }
-    }
-
-    @Override
-    public void play(final String id, final String title, final String url) {
-        DLog.d( "Play Called");
-        mIsPaused = false;
-
-        if (url == null) {
-            onErrorInternal("Invalid URL passed");
-            return;
-        }
-        this.id = id;
-        mUrl = url;
-        mTitle = title;
-        onTryPlaying(title);
-        stop();
-        init();
-        try {
-            playInternal(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-/*
-        Thread backgroudThread = new Thread( new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    playInternal(url);
-                } catch (final IOException e) {
-                    onErrorInternal("Not able to play this right now.");
-                    DLog.e(e.getMessage());
-                }
-            }
-        });
-
-        backgroudThread.start();
-        */
-    }
-
-    private synchronized void  playInternal( final String url) throws IOException {
-        if(mPlayer == null){
-            onErrorInternal("Not able to play, please retry.");
-            return;
-        }
-        try {
-            mPlayer.setDataSource(url);
-            mPlayer.prepareAsync();
-        } catch (final Exception e) {
-            DLog.d("Not able to play because of:" + e.getMessage());
-            onErrorInternal("Not able to play this right now.");
-            stop();
-            e.printStackTrace();
-            return;
-        }
-        mPlayer.setOnPreparedListener(
+            mPlayer.setOnPreparedListener(
                 new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer player) {
@@ -193,20 +75,129 @@ public class Player implements IPlayer {
                         mHandler.postDelayed(mUpdateTimeTask, 1000);
                     }
                 });
-        mPlayer.setOnCompletionListener(
+            mPlayer.setOnCompletionListener(
                 new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         onComplete(mTitle);
                     }
                 });
-        mPlayer.setOnErrorListener(
+            mPlayer.setOnErrorListener(
                 new MediaPlayer.OnErrorListener() {
                     public boolean onError(MediaPlayer mp, int what, final int extra) {
                         onErrorInternal("Not able to play this right now.");
                         return true;
                     }
                 });
+        } else{
+            DLog.d( "MusicPlayerUtils::skip init as it already exist");
+        }
+    }
+
+
+    // public functions.
+    public void stop() {
+        DLog.d( "MusicPlayerUtils::stop called");
+        mIsPaused = false;
+        if (mPlayer != null) {
+            mPlayer.stop();
+            if(mPlayer != null) {
+                mPlayer.reset();
+            }
+            mPlayer = null;
+        }
+    }
+
+    public boolean isPlaying() {
+        return mPlayer != null && mPlayer.isPlaying();
+    }
+
+    public void pause() {
+        DLog.d( "MusicPlayerUtils::pause called");
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.pause();
+            mPlayerCallback.onPause(id, mTitle);
+            mIsPaused = true;
+        }
+    }
+
+    public void resume() {
+        DLog.d( "MusicPlayerUtils::resume called");
+        if (mPlayer != null && mPlayer.isPlaying() == false) {
+            mPlayer.start();
+            mPlayerCallback.onResume(id, mTitle);
+            mIsPaused = false;
+        }
+    }
+
+    public void restart() {
+        DLog.d( "MusicPlayerUtils::restart called");
+        if (mUrl != null) {
+            play(id, mTitle, mUrl);
+        }
+        mIsPaused = false;
+    }
+
+
+    public void mute() {
+        DLog.d( "MusicPlayerUtils::mute called");
+    }
+
+
+    public void unmute() {
+        DLog.d( "MusicPlayerUtils::unmute called");
+    }
+
+
+    public boolean isPaused() {
+        return mIsPaused;
+    }
+
+    public void seekTo(int progress) {
+        DLog.d( "MusicPlayerUtils::seekTo called");
+        int msec = (int) (mTotalDuration * (progress / 100.0));
+        if (mPlayer != null) {
+            mPlayer.seekTo(msec);
+        }
+    }
+
+
+    public void play(final String id, final String title, final String url) {
+        DLog.d( "MusicPlayerUtils::play called");
+        mIsPaused = false;
+
+        if (url == null) {
+            onErrorInternal("Invalid URL passed");
+            return;
+        }
+        this.id = id;
+        mUrl = url;
+        mTitle = title;
+        onTryPlaying(title);
+        stop();
+        init();
+        try {
+            playInternal(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void  playInternal( final String url) throws IOException {
+        if(mPlayer == null){
+            onErrorInternal("Not able to play, please retry.");
+            return;
+        }
+        try {
+            mPlayer.setDataSource(url);
+            mPlayer.prepareAsync();
+        } catch (final Exception e) {
+            DLog.d("Not able to play because of:" + e.getMessage());
+            onErrorInternal("Not able to play this right now.");
+            stop();
+            e.printStackTrace();
+            return;
+        }
     }
 
     private void onErrorInternal(final String msg) {

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
+import in.co.dipankar.quickandorid.services.MusicForegroundService;
 import in.co.dipankar.quickandorid.utils.AlarmUtils;
 import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
@@ -23,8 +24,8 @@ import in.co.dipankar.quickandorid.utils.GateKeeperUtils;
 import in.co.dipankar.quickandorid.utils.HTTPUtils;
 import in.co.dipankar.quickandorid.utils.HttpdUtils;
 import in.co.dipankar.quickandorid.utils.IPhoneContacts;
+import in.co.dipankar.quickandorid.utils.MusicPlayerUtils;
 import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
-import in.co.dipankar.quickandorid.utils.Player;
 import in.co.dipankar.quickandorid.utils.RemoteDebug;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     testGK();
     testPinView();
     testLogin();
+    initPlayer();
 
   }
 
@@ -709,10 +711,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*****  Test Player  ****/
-    Player mPlayer;
-    public void startPlayer(View view) {
-        if(mPlayer != null) return;
-        mPlayer = new Player(this, new Player.IPlayerCallback() {
+    private MusicPlayerUtils mPlayer;
+    public void initPlayer(){
+        mPlayer = new MusicPlayerUtils(this, new MusicPlayerUtils.IPlayerCallback() {
             @Override
             public void onTryPlaying(String id, String msg) {
                 DLog.d("onTryPlaying called");
@@ -753,7 +754,9 @@ public class MainActivity extends AppCompatActivity {
                 DLog.d("onComplete called");
             }
         });
-    mPlayer.play(
+    }
+    public void startPlayer(View view) {
+        mPlayer.play(
         "1", "Test", "https://av.voanews.com/clips/VBA/2015/10/31/20151031-160000-VBA043-program.mp3");
     }
 
@@ -761,5 +764,35 @@ public class MainActivity extends AppCompatActivity {
         if(mPlayer!=null){
             mPlayer.stop();
         }
+    }
+    public void playPausePalyer(View view) {
+        if(mPlayer == null){
+            return;
+        }
+        if(mPlayer.isPaused()){
+            mPlayer.resume();
+        }
+        else if(mPlayer.isPlaying()){
+            mPlayer.pause();
+        }
+        else {
+            mPlayer.restart();
+        }
+    }
+
+    /********  Music Player with Service */
+    public void stopPlayerService(View view) {
+        Intent mService = new Intent(this, MusicService.class);
+        mService.putExtra("ID","0");
+        mService.putExtra("NAME","Jello");
+        mService.putExtra("URL","http://wish2.soundsip.com/box/oink/files/Audio%20Stories/Bengali%20Audio%20Stories/Sunday%20Suspense/Poitrik%20Bhita%20-%20Bibhutibhushan%20Bandyopadhyay%2064ks.mp3");
+        mService.setAction(MusicForegroundService.Contracts.START);
+        startService(mService);
+    }
+
+    public void playPausePalyerService(View view) {
+        Intent mService = new Intent(this, MusicService.class);
+        mService.setAction(MusicForegroundService.Contracts.PLAY_PAUSE);
+        startService(mService);
     }
 }

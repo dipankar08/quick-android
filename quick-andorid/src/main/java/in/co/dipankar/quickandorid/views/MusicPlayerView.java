@@ -16,11 +16,12 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import in.co.dipankar.quickandorid.R;
-import in.co.dipankar.quickandorid.utils.Player;
+import in.co.dipankar.quickandorid.utils.MusicPlayerUtils;
 
 public class MusicPlayerView extends LinearLayout {
     private Context mContext;
-    private @Nullable  Player mPlayer;
+    private @Nullable
+    MusicPlayerUtils mPlayer;
 
     private ImageButton mPlayPause;
     private ImageButton mVol;
@@ -103,7 +104,7 @@ public class MusicPlayerView extends LinearLayout {
     }
 
     private void initPlayer() {
-        mPlayer = new Player(getContext(), new Player.IPlayerCallback() {
+        mPlayer = new MusicPlayerUtils(getContext(), new MusicPlayerUtils.IPlayerCallback() {
             @Override
             public void onTryPlaying(String id, String msg) {
                 mPlayPause.setImageResource(R.drawable.ic_pause_grey_24);
