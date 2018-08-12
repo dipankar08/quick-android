@@ -242,5 +242,36 @@
             android:onClick="playPausePalyerService"
             />
 
+        <TextView
+            android:id="@+id/ani_test"
+            android:layout_width="100dp"
+            android:background="#00ff00"
+            android:text="Animation Text"
+            android:layout_height="100dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="test Animation"
+            android:onClick="testAnimation"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="showAnimation"
+            android:onClick="showAnimation"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="hideAnimation"
+            android:onClick="hideAnimation"
+            />
+
     </LinearLayout>
 </ScrollView>

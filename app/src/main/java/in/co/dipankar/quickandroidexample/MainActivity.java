@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 
@@ -17,6 +18,7 @@ import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
 import in.co.dipankar.quickandorid.services.MusicForegroundService;
 import in.co.dipankar.quickandorid.utils.AlarmUtils;
+import in.co.dipankar.quickandorid.utils.AnimationUtils;
 import in.co.dipankar.quickandorid.utils.AudioRecorderUtil;
 import in.co.dipankar.quickandorid.utils.DLog;
 import in.co.dipankar.quickandorid.utils.DialogUtils;
@@ -795,4 +797,23 @@ public class MainActivity extends AppCompatActivity {
         mService.setAction(MusicForegroundService.Contracts.PLAY_PAUSE);
         startService(mService);
     }
+
+    /********  Test Animation ********/
+    public void testAnimation(View view) {
+        TextView textView = findViewById(R.id.ani_test);
+        //AnimationUtils.doPulseAnimation(textView);
+        AnimationUtils.doShackAnimation(getBaseContext(), textView);
+    }
+
+    public void hideAnimation(View view) {
+        TextView textView = findViewById(R.id.ani_test);
+        AnimationUtils.setVisibilityWithAnimation(textView,View.GONE,AnimationUtils.Type.FADE_IN_OUT);
+
+    }
+
+    public void showAnimation(View view) {
+        TextView textView = findViewById(R.id.ani_test);
+        AnimationUtils.setVisibilityWithAnimation(textView,View.VISIBLE,AnimationUtils.Type.FADE_IN_OUT);
+    }
+
 }
