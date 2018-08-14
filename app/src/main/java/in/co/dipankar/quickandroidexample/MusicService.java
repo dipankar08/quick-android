@@ -16,4 +16,6 @@ public class MusicService extends MusicForegroundService{
     protected Class getActivityClass() {
         return MainActivity.class;
     }
+
+
 }

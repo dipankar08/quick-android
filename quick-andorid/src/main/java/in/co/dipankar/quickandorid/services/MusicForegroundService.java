@@ -9,13 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,12 +32,32 @@ import static in.co.dipankar.quickandorid.services.MusicForegroundService.Contra
 import static in.co.dipankar.quickandorid.services.MusicForegroundService.Contracts.PLAY_PAUSE;
 
 public abstract class MusicForegroundService extends Service {
+    
+    public interface Callback{
+
+        void onTryPlaying(String id, String msg);
+
+        void onSuccess(String id, String ms);
+
+        void onResume(String id, String ms);
+
+        void onPause(String id, String msg);
+
+        void onError(String id, String msg);
+
+        void onSeekBarPossionUpdate(String id, int total, int cur);
+
+        void onMusicInfo(String id, HashMap<String, Object> info);
+        void onComplete(String id, String msg);
+    }
     private MusicPlayerUtils mMusicPlayerUtils;
+    
     String mTitle;
-    private List<PlayList> mPlayList;
+    private List<Item> mPlayList;
     private int mCurIndex;
+    @Nullable  private Callback mCallback;
 
-
+    
     public interface Contracts {
         public String START = "START_PLAY";
         public String ACTION_TRY_PLAYING = "TRY_PLAYING";
@@ -48,6 +71,14 @@ public abstract class MusicForegroundService extends Service {
         String OPEN_APP = "OPEN_APP";
     }
 
+    public enum State{
+        TRY_PLAYING,
+        SUCCESS,
+        ERROR,
+        RESUME,
+        PASUE,
+        COMPLETE
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -55,42 +86,63 @@ public abstract class MusicForegroundService extends Service {
         mMusicPlayerUtils = new MusicPlayerUtils(this, new MusicPlayerUtils.IPlayerCallback() {
             @Override
             public void onTryPlaying(String id, String msg) {
-                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(ACTION_TRY_PLAYING));
+                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(State.TRY_PLAYING));
+                if(mCallback !=null) {
+                    mCallback.onTryPlaying(id, msg);
+                }
             }
 
             @Override
             public void onSuccess(String id, String ms) {
-                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(PLAY_PAUSE));
+                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(State.SUCCESS));
+                if(mCallback !=null) {
+                    mCallback.onSuccess(id, ms);
+                }
             }
 
             @Override
             public void onResume(String id, String ms) {
-                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(PLAY_PAUSE));
+                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(State.RESUME));
+                if(mCallback !=null) {
+                    mCallback.onResume(id, ms);
+                }
             }
 
             @Override
-            public void onPause(String id, String ms) {
-                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(PLAY_PAUSE));
+            public void onPause(String id, String msg) {
+                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(State.PASUE));
+                if(mCallback !=null) {
+                    mCallback.onPause(id, msg);
+                }
             }
 
             @Override
             public void onMusicInfo(String id, HashMap<String, Object> info) {
-
+                if(mCallback !=null) {
+                    mCallback.onMusicInfo(id, info);
+                }
             }
 
             @Override
             public void onSeekBarPossionUpdate(String id, int total, int cur) {
-
+                if(mCallback !=null) {
+                    mCallback.onSeekBarPossionUpdate(id, total, cur);
+                }
             }
 
             @Override
             public void onError(String id, String msg) {
-                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(PLAY_PAUSE));
+                NotificationManagerCompat.from(getApplicationContext()).notify(NOTIFICATION_ID,getNotification(State.ERROR));
+                if(mCallback !=null) {
+                    mCallback.onError(id, msg);
+                }
             }
 
             @Override
-            public void onComplete(String id, String ms) {
-
+            public void onComplete(String id, String msg) {
+                if(mCallback != null) {
+                    mCallback.onComplete(id, msg);
+                }
             }
         });
     }
@@ -101,25 +153,29 @@ public abstract class MusicForegroundService extends Service {
         if (intent.getAction() == null) {
             return START_STICKY;
         }
+        State state = State.TRY_PLAYING;
         if (intent.getAction().equals(Contracts.START)) {
             DLog.d("MusicForegroundService:: Start called");
-            String id = intent.getStringExtra("ID");
-            String title = intent.getStringExtra("TITLE");
-            mTitle = title;
-            String url = intent.getStringExtra("URL");
-            mMusicPlayerUtils.play(id, title, url);
+            mPlayList = (List<Item>) intent.getSerializableExtra("LIST");
+            mCurIndex = intent.getIntExtra("INDEX", 0);
+            play();
         } else if (intent.getAction().equals(Contracts.PLAY_PAUSE)) {
             DLog.d("MusicForegroundService:: playPause called");
             if (mMusicPlayerUtils.isPlaying()) {
                 mMusicPlayerUtils.pause();
+                state = State.PASUE;
             } else if (mMusicPlayerUtils.isPaused()) {
                 mMusicPlayerUtils.resume();
+                state = State.RESUME;
             }
         } else if (intent.getAction().equals(Contracts.NEXT)) {
             DLog.d("MusicForegroundService:: Next called");
-            // mMusicPlayerUtils.
+            mCurIndex++;
+            play();
         } else if (intent.getAction().equals(Contracts.PREV)) {
             DLog.d("MusicForegroundService:: Prev called");
+            mCurIndex--;
+            play();
             //mMusicPlayerUtils.
         } else if (intent.getAction().equals(Contracts.QUIT)) {
             DLog.d("MusicForegroundService:: Quit called");
@@ -127,13 +183,32 @@ public abstract class MusicForegroundService extends Service {
             stopForeground(true);
             stopSelf();
         }
-        startForeground(Contracts.NOTIFICATION_ID, getNotification(intent.getAction()));
+        startForeground(Contracts.NOTIFICATION_ID, getNotification(state));
         return START_STICKY;
 
     }
 
+    private void play() {
+        if(mPlayList == null|| mPlayList.size() <=0){
+            return;
+        }
+        if(mCurIndex>=mPlayList.size()){
+            mCurIndex=0;
+        }
+        if(mCurIndex < 0){
+            mCurIndex = mPlayList.size() - 1;
+        }
 
-    private Notification getNotification(String action){
+        Item item = mPlayList.get(mCurIndex);
+        mTitle = item.getName();
+        if(item != null) {
+            mMusicPlayerUtils.play(item.getId(), item.getName(), item.getUrl());
+        }
+    }
+
+
+    private Notification getNotification(State state){
+
         Intent notificationIntent = new Intent(this, getActivityClass());
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
@@ -157,9 +232,8 @@ public abstract class MusicForegroundService extends Service {
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Best FM Radio India")
-            .setContentText(mTitle)
+            .setContentText(getStringForAction(state))
             .setSmallIcon(R.drawable.ic_launcher)
-
             .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         if(mMusicPlayerUtils.isPlaying()){
@@ -168,17 +242,30 @@ public abstract class MusicForegroundService extends Service {
             notification.addAction(R.drawable.ic_launcher, "Play", pendingPlayPauseIntent);
         }
 
-        if(action.equals(ACTION_TRY_PLAYING)){
-            notification.setContentText("Wait ... Try playing..");
-        } else{
-            notification.setContentText(mTitle);
-        }
 
-        // TODO.
-       // notification.addAction(R.drawable.ic_launcher, "Next", pendingNextPauseIntent);
+        notification.addAction(R.drawable.ic_launcher, "Next", pendingNextPauseIntent);
         notification.addAction(R.drawable.ic_launcher, "Quit", pendingQuitPauseIntent);
 
         return notification.build();
+    }
+
+    private CharSequence getStringForAction(State state) {
+        switch (state){
+            case ERROR:
+                return "Error Occuried while playing "+mTitle;
+            case PASUE:
+                return "Paused "+mTitle;
+            case RESUME:
+                return "Playing "+mTitle;
+            case SUCCESS:
+                return "Playing "+mTitle;
+            case COMPLETE:
+                return "Completed Playing"+mTitle;
+            case TRY_PLAYING:
+                return "Trying to play "+mTitle;
+            default:
+                return "Unknown State";
+        }
     }
 
     protected abstract Class getActivityClass();
@@ -191,20 +278,28 @@ public abstract class MusicForegroundService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // Used only in case of bound services.
-        return null;
+        DLog.d("MusicForegroundService::onBind called");
+        return binder;
     }
 
-    public final class PlayList{
-        private String name;
-        private String id;
-        private String url;
-        public PlayList(String id, String name, String url){
-            this.id = id;
-            this.name= name;
-            this.url = url;
+
+
+    public void setCallback(Callback callback){
+        mCallback = callback;
+    }
+
+    public void unsetCallback(Callback callback){
+        mCallback = null;
+    }
+
+    public class LocalBinder extends Binder {
+        public MusicForegroundService getService() {
+            return MusicForegroundService.this;
         }
     }
+
+    private IBinder binder = new LocalBinder();
+
 }
 
 

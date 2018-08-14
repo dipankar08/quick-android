@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.twitter.sdk.android:twitter-core:3.0.0'
+    implementation 'org.aspectj:aspectjtools:1.8.1'
 }
 
 apply plugin: 'com.novoda.bintray-release'
@@ -51,7 +52,7 @@ apply plugin: 'com.novoda.bintray-release'
 publish {
     groupId = 'com.github.dipankar08'
     artifactId = 'quick-android'
-    publishVersion = '0.55'
+    publishVersion = '0.56'
     desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
     licences = ['Apache-2.0']
     uploadName='quickandroid'

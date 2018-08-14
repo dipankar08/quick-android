@@ -1,8 +1,11 @@
 package in.co.dipankar.quickandroidexample;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +16,11 @@ import com.facebook.FacebookSdk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import in.co.dipankar.quickandorid.annotations.MethodStat;
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
+import in.co.dipankar.quickandorid.services.Item;
 import in.co.dipankar.quickandorid.services.MusicForegroundService;
 import in.co.dipankar.quickandorid.utils.AlarmUtils;
 import in.co.dipankar.quickandorid.utils.AnimationUtils;
@@ -43,16 +48,19 @@ import in.co.dipankar.quickandorid.views.SocialLoginView;
 import in.co.dipankar.quickandorid.views.StateImageButton;
 import in.co.dipankar.quickandorid.views.UserInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
 
 public class MainActivity extends AppCompatActivity {
 
   NetworkChangeReceiver mNetworkChangeReceiver;
 
   @Override
+  @MethodStat
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -97,8 +105,12 @@ public class MainActivity extends AppCompatActivity {
     testPinView();
     testLogin();
     initPlayer();
-
+    initBackGroundPlayer();
   }
+
+    private void initBackGroundPlayer() {
+      bindService();
+    }
 
     SocialLoginView mloginView;
    private void testLogin() {
@@ -783,11 +795,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /********  Music Player with Service */
+    private ServiceConnection mConnection =
+            new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder iBinder) {
+                    MusicService.LocalBinder myLocalBinder = (MusicService.LocalBinder) iBinder;
+                    MusicForegroundService musicService = myLocalBinder.getService();
+                    DLog.d("Connected to bounded service");
+                    musicService.setCallback(new MusicForegroundService.Callback() {
+                        @Override
+                        public void onTryPlaying(String id, String msg) {
+                            DLog.d("Binder::onTryPlaying called");
+                        }
+
+                        @Override
+                        public void onSuccess(String id, String ms) {
+                            DLog.d("Binder::onSuccess called");
+                        }
+
+                        @Override
+                        public void onResume(String id, String ms) {
+                            DLog.d("Binder::onResume called");
+                        }
+
+                        @Override
+                        public void onPause(String id, String msg) {
+                            DLog.d("Binder::onPause called");
+                        }
+
+                        @Override
+                        public void onError(String id, String msg) {
+                            DLog.d("Binder::onError called");
+                        }
+
+                        @Override
+                        public void onSeekBarPossionUpdate(String id, int total, int cur) {
+                            DLog.d("Binder::onSeekBarPossionUpdate called");
+                        }
+
+                        @Override
+                        public void onMusicInfo(String id, HashMap<String, Object> info) {
+                            DLog.d("Binder::onMusicInfo called");
+                        }
+
+                        @Override
+                        public void onComplete(String id, String msg) {
+                            DLog.d("Binder::onComplete called");
+                        }
+                    });
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    DLog.d("Disconnected to bounded service");
+                }
+            };
+
+    private void log(Object obj) {
+        DLog.d(obj.getClass().getSimpleName()+"::"+Thread.currentThread().getStackTrace()[3].getMethodName() +" called");
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+
+    public void bindService(){
+        log(this);
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
+    }
+
     public void stopPlayerService(View view) {
         Intent mService = new Intent(this, MusicService.class);
-        mService.putExtra("ID","0");
-        mService.putExtra("NAME","Jello");
-        mService.putExtra("URL","http://wish2.soundsip.com/box/oink/files/Audio%20Stories/Bengali%20Audio%20Stories/Sunday%20Suspense/Poitrik%20Bhita%20-%20Bibhutibhushan%20Bandyopadhyay%2064ks.mp3");
+        List<Item> list = new ArrayList<Item>();
+        list.add(new Item("1","Hello1","https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"));
+        list.add(new Item("2","Hello 2","https://www.sample-videos.com/audio/mp3/wave.mp3"));
+
+        mService.putExtra("LIST", (Serializable) list);
+        mService.putExtra("ID",0);
         mService.setAction(MusicForegroundService.Contracts.START);
         startService(mService);
     }
