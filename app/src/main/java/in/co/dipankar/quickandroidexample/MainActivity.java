@@ -36,6 +36,7 @@ import in.co.dipankar.quickandorid.utils.PhoneContactsUtils;
 import in.co.dipankar.quickandorid.utils.RemoteDebug;
 import in.co.dipankar.quickandorid.utils.RuntimePermissionUtils;
 import in.co.dipankar.quickandorid.utils.SharedPrefsUtil;
+import in.co.dipankar.quickandorid.utils.SimplePubSub;
 import in.co.dipankar.quickandorid.utils.WSUtils;
 import in.co.dipankar.quickandorid.views.MultiStateImageButton;
 import in.co.dipankar.quickandorid.views.MusicPlayerView;
@@ -106,7 +107,41 @@ public class MainActivity extends AppCompatActivity {
     testLogin();
     initPlayer();
     initBackGroundPlayer();
+    testSimplePubSub();
   }
+
+    private void testSimplePubSub() {
+        SimplePubSub simplePubSub = new SimplePubSub();
+        simplePubSub.addCallback(new SimplePubSub.Callback() {
+            @Override
+            public void onConnect() {
+                DLog.d("SimplePubSub::onConnect called");
+            }
+
+            @Override
+            public void onDisconnect() {
+                DLog.d("SimplePubSub::onDisconnect called");
+            }
+
+            @Override
+            public void onError(String err) {
+                DLog.d("SimplePubSub::onError called:"+err);
+            }
+
+            @Override
+            public void onMessage(String topic, String data) {
+                DLog.d("SimplePubSub::onMessage called ->Topic"+topic+". Data:"+data);
+            }
+
+            @Override
+            public void onSignal(String topic, String data) {
+                DLog.d("SimplePubSub::onSignal called ->Topic"+topic+". Data:"+data);
+            }
+        });
+        simplePubSub.connect();
+        simplePubSub.subscribe("hello");
+        simplePubSub.publish("hello", "hello message");
+    }
 
     private void initBackGroundPlayer() {
       bindService();
