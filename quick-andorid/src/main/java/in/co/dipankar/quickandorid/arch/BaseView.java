@@ -1,4 +1,5 @@
 package in.co.dipankar.quickandorid.arch;
 
-public class BaseView {
+public interface BaseView<VS extends BaseViewState> {
+    void render(VS viewState);
 }

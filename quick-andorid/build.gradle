@@ -1,9 +1,11 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -38,23 +40,45 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.0.2'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'org.nanohttpd:nanohttpd:2.2.0'
     implementation 'com.facebook.android:facebook-login:[4,5)'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.twitter.sdk.android:twitter-core:3.0.0'
     implementation 'org.aspectj:aspectjtools:1.8.1'
+    implementation 'com.github.nkzawa:socket.io-client:0.3.0'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    api 'com.google.guava:guava:27.0.1-android'
+
 }
 
-apply plugin: 'com.novoda.bintray-release'
-
 publish {
-    groupId = 'com.github.dipankar08'
-    artifactId = 'quick-android'
-    publishVersion = '0.57'
-    desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
+    def groupProjectID = 'com.github.dipankar08'
+    def artifactProjectID = 'quick-android'
+    def publishVersionID = '0.61'
+
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    //userOrg = 'peerreview'
+    desc = 'Andorid re-usaable code bundle by dipnkar '
     licences = ['Apache-2.0']
     uploadName='quickandroid'
-    website = 'https://github.com/stfalcon-studio/ContentManager.git'
+    website = 'https://dipankar.co.in'
+
+    publishing {
+        publications {
+            MyPub(MavenPublication) {
+                groupId groupProjectID
+                artifactId artifactProjectID
+                version publishVersionID
+
+                //don't forget to add bundleRelease
+                artifact bundleRelease
+
+            }
+        }
+    }
+    publications = ['MyPub']
 }

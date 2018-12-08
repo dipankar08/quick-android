@@ -59,11 +59,13 @@ import java.util.concurrent.BlockingDeque;
 public class MainActivity extends AppCompatActivity {
 
   NetworkChangeReceiver mNetworkChangeReceiver;
-
+    private SimplePubSub mSimplePubSub;
   @Override
   @MethodStat
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+
 
      // FacebookSdk.sdkInitialize(this);
     setContentView(R.layout.activity_main);
@@ -111,8 +113,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
     private void testSimplePubSub() {
-        SimplePubSub simplePubSub = new SimplePubSub();
-        simplePubSub.addCallback(new SimplePubSub.Callback() {
+        mSimplePubSub= new SimplePubSub(new SimplePubSub.Config() {
+            @Override
+            public String getURL() {
+                return "ws://192.168.1.114:8081";
+            }
+        });
+        mSimplePubSub.addCallback(new SimplePubSub.Callback() {
             @Override
             public void onConnect() {
                 DLog.d("SimplePubSub::onConnect called");
@@ -138,10 +145,11 @@ public class MainActivity extends AppCompatActivity {
                 DLog.d("SimplePubSub::onSignal called ->Topic"+topic+". Data:"+data);
             }
         });
-        simplePubSub.connect();
-        simplePubSub.subscribe("hello");
-        simplePubSub.publish("hello", "hello message");
+        mSimplePubSub.connect();
+        mSimplePubSub.subscribe("live_tv");
+        mSimplePubSub.publish("live_tv", "hello message");
     }
+
 
     private void initBackGroundPlayer() {
       bindService();
@@ -591,12 +599,14 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mNetworkChangeReceiver.onResume();
+    mSimplePubSub.connect();
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     mNetworkChangeReceiver.onPause();
+    mSimplePubSub.disconnect();
   }
 
   private void testNR() {

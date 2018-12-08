@@ -1,6 +1,5 @@
 package in.co.dipankar.quickandorid.utils;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.json.JSONException;
@@ -18,7 +17,10 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public final class SimplePubSub {
+/**
+ * IMPORTANT : THIS SOLUSTION DOES NOT WORKS - There is a bug in OKHTTP
+ */
+public final class SimplePubSubWithOkHttp {
 
     private OkHttpClient mOkHttpClient;
     private EchoWebSocketListener mEchoWebSocketListener;
@@ -47,10 +49,10 @@ public final class SimplePubSub {
         mCallbackList.remove(callback);
     }
 
-    public SimplePubSub(){
+    public SimplePubSubWithOkHttp(){
         mCallbackList = new ArrayList<>();
     }
-    public SimplePubSub(@Nullable  Config config) {
+    public SimplePubSubWithOkHttp(@Nullable  Config config) {
         if(config != null && config.getURL() != null){
             url = config.getURL();
         }
