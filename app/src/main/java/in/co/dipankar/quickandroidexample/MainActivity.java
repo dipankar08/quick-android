@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import in.co.dipankar.quickandorid.annotations.MethodStat;
+import in.co.dipankar.quickandorid.arch.Error;
 import in.co.dipankar.quickandorid.buttonsheet.CustomButtonSheetView;
 import in.co.dipankar.quickandorid.buttonsheet.SheetItem;
 import in.co.dipankar.quickandorid.receivers.NetworkChangeReceiver;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
             DLog.d("New State" + newstate);
           }
         });
+
+      testBuilder();
     testSF();
     testRP();
     testNR();
@@ -110,7 +113,16 @@ public class MainActivity extends AppCompatActivity {
     initPlayer();
     initBackGroundPlayer();
     testSimplePubSub();
+
   }
+
+    private void testBuilder() {
+        TestViewState testViewState = new TestViewState.Builder()
+                .setName("DIP")
+                .setError(new Error.Builder().setDesc("Desc").setTitle("View State Title").build())
+                .build();
+        DLog.d(testViewState.getError().getTitle());
+    }
 
     private void testSimplePubSub() {
         mSimplePubSub= new SimplePubSub(new SimplePubSub.Config() {

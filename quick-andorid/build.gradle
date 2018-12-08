@@ -30,6 +30,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -88,12 +92,11 @@ publishing {
 publish {
     def groupProjectID = 'com.github.dipankar08'
     def artifactProjectID = 'quick-android'
-    def publishVersionID = '0.62'
+    def publishVersionID = '0.63'
 
     groupId = groupProjectID
     artifactId = artifactProjectID
     publishVersion = publishVersionID
-    //userOrg = 'peerreview'
     desc = 'Andorid re-usaable code bundle by dipnkar '
     licences = ['Apache-2.0']
     uploadName='quickandroid'
